@@ -3,570 +3,575 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Ace Name Sniper • ULTIMATE 2026 🔥</title>
+  <title>RBLX Sniper • 2026 Reloaded</title>
 
   <style>
     :root {
-      --bg: linear-gradient(135deg, #020208 0%, #0a0a14 50%, #0f0f1f 100%);
-      --card: rgba(15, 15, 30, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text: #f8fafc;
-      --dim: #a0aec0;
-      --accent: #10b981;
-      --accent-glow: #34d399;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --blur: blur(25px);
-      --shadow: 0 20px 60px rgba(0,0,0,0.6);
-      --neon-glow: 0 0 30px rgba(16, 185, 129, 0.6);
+      --bg-1: #0a0012;
+      --bg-2: #11001f;
+      --card: rgba(18, 18, 35, 0.82);
+      --card-border: rgba(120, 100, 255, 0.14);
+      --text: #f0f4ff;
+      --dim: #b0b8ff;
+      --accent: #7c3aed;
+      --accent-glow: #a78bfa;
+      --success: #22c55e;
+      --success-glow: #4ade80;
+      --danger: #f87171;
+      --blur: blur(24px);
+      --shadow: 0 16px 48px rgba(0,0,0,0.65);
     }
 
-    * { box-sizing: border-box; margin:0; padding:0; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      background: var(--bg);
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
-      padding: 12px;
+      padding: 10px 12px;
+      background-attachment: fixed;
       overflow-x: hidden;
-      position: relative;
-    }
-
-    /* PARTICLE BACKGROUND */
-    .particles {
-      position: fixed; inset: 0; pointer-events: none; z-index: 1;
-    }
-    .particle {
-      position: absolute; width: 4px; height: 4px;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-      border-radius: 50%; animation: float 6s infinite linear;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-120vh) rotate(360deg); }
     }
 
     .container {
-      max-width: 100%; width: 100%; margin: 0 auto;
-      background: var(--card); backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur); border-radius: 32px;
-      border: 1px solid var(--card-border); box-shadow: var(--shadow);
-      overflow: hidden; touch-action: manipulation; z-index: 10;
+      max-width: 100%;
+      margin: 0 auto;
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-radius: 28px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 20px 24px 16px;
+      text-align: center;
+      background: linear-gradient(to bottom, rgba(124,58,237,0.12), transparent);
       position: relative;
     }
 
-    .header {
-      text-align: center; padding: 36px 24px 24px;
-      background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(52,211,153,0.08));
-      border-bottom: 1px solid var(--card-border); position: relative;
-      overflow: hidden;
-    }
-    .header::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 30% 20%, rgba(16,185,129,0.1) 0%, transparent 50%);
-      animation: wave 8s ease-in-out infinite;
-    }
-    @keyframes wave { 0%, 100% { transform: translateX(-100%) scaleX(1); } 50% { transform: translateX(100%) scaleX(1.1); } }
-
     h1 {
-      font-size: clamp(1.8rem, 6vw, 2.4rem); font-weight: 900;
-      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7, #10b981);
-      background-size: 300% 100%; -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent; animation: gradientFlow 4s ease infinite;
-      text-shadow: var(--neon-glow); position: relative; z-index: 2;
-    }
-    @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-    .tabs { display: flex; border-bottom: 1px solid var(--card-border); }
-    .tab-btn {
-      flex: 1; padding: 20px; background: transparent; border: none;
-      color: var(--dim); font-weight: 700; font-size: 1.1rem;
-      cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative; overflow: hidden;
-    }
-    .tab-btn::before {
-      content: ''; position: absolute; inset: 0; background: var(--accent);
-      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-      opacity: 0.1;
-    }
-    .tab-btn.active {
-      color: var(--accent-glow); 
-    }
-    .tab-btn.active::before { transform: scaleX(1); }
-    .tab-btn:hover { transform: translateY(-2px); }
-
-    .tab-content {
-      display: none; padding: 28px 24px; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .tab-content.active { display: block; }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #c084fc, #a78bfa, #7c3aed, #c084fc);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient 7s linear infinite;
     }
 
-    label { 
-      font-size: 1rem; margin-bottom: 10px; display: block; 
-      color: var(--dim); font-weight: 600; 
-    }
-    input[type="range"] {
-      width: 100%; height: 12px; margin: 12px 0 28px;
-      background: rgba(255,255,255,0.1); border-radius: 999px;
-      appearance: none; outline: none; cursor: grab;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      appearance: none; width: 28px; height: 28px;
-      background: linear-gradient(45deg, var(--accent), var(--accent-glow));
-      border-radius: 50%; cursor: grab; box-shadow: var(--neon-glow);
-      border: 3px solid rgba(255,255,255,0.2);
-    }
-    input[type="text"], input[type="file"] {
-      width: 100%; padding: 18px 20px; margin-bottom: 20px;
-      background: rgba(30,30,50,0.8); border: 1px solid var(--card-border);
-      border-radius: 20px; color: white; font-size: 1.1rem;
-      transition: all 0.3s; backdrop-filter: blur(10px);
-    }
-    input[type="text"]:focus, input[type="file"]:focus {
-      outline: none; border-color: var(--accent); box-shadow: var(--neon-glow);
-      transform: scale(1.02);
+    @keyframes gradient {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    button {
-      padding: 18px 24px; border: none; border-radius: 20px;
-      font-weight: 800; cursor: pointer; transition: all 0.4s;
-      font-size: 1.1rem; position: relative; overflow: hidden;
-      backdrop-filter: blur(10px);
+    .status-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.4);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: #4ade80;
     }
-    button::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(45deg, var(--accent), var(--accent-glow));
-      transform: scale(0); transition: transform 0.3s;
-    }
-    button:hover::before { transform: scale(1.1); }
-    button:active { transform: scale(0.98); }
 
-    .main-btn {
-      width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent-glow));
-      color: white; margin: 24px 0; box-shadow: var(--neon-glow), 0 12px 40px rgba(16,185,129,0.4);
+    .segmented {
+      display: flex;
+      margin: 16px 24px 0;
+      background: rgba(30,30,50,0.6);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(120,100,255,0.2);
+    }
+
+    .segment-btn {
+      flex: 1;
+      padding: 14px;
+      background: transparent;
+      border: none;
+      color: var(--dim);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .segment-btn.active {
+      background: rgba(124,58,237,0.35);
+      color: white;
+      box-shadow: inset 0 0 12px rgba(124,58,237,0.3);
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .group {
+      margin-bottom: 28px;
+    }
+
+    .group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: var(--dim);
+      font-weight: 500;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 5px;
+      appearance: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--accent-glow);
+      border-radius: 50%;
+      border: 3px solid #1e1e38;
+      box-shadow: 0 0 16px rgba(124,58,237,0.6);
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(30,30,50,0.75);
+      border: 1px solid rgba(120,100,255,0.2);
+      border-radius: 16px;
+      color: white;
+      font-size: 1.05rem;
+      transition: all 0.2s;
+    }
+
+    input[type=text]:focus {
+      outline: none;
+      border-color: var(--accent-glow);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .preset-btn {
+      padding: 10px 16px;
+      background: rgba(30,30,50,0.8);
+      border: 1px solid rgba(120,100,255,0.25);
+      border-radius: 12px;
+      color: var(--dim);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .preset-btn:hover {
+      background: rgba(124,58,237,0.25);
+      color: white;
+    }
+
+    #startBtn {
+      width: 100%;
+      padding: 18px;
+      margin: 24px 0 32px;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      color: white;
       font-size: 1.2rem;
-    }
-    button.stop { 
-      background: linear-gradient(135deg, var(--danger), #f87171);
-      box-shadow: 0 12px 40px rgba(239,68,68,0.4);
+      font-weight: 700;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(124,58,237,0.4);
+      transition: all 0.3s;
     }
 
-    .status {
-      background: rgba(30,30,50,0.7); backdrop-filter: blur(20px);
-      padding: 24px; border-radius: 24px; text-align: center;
-      margin: 24px 0; border: 1px solid var(--card-border);
-      min-height: 100px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    #startBtn.stop {
+      background: linear-gradient(135deg, #ef4444, #f87171);
+      box-shadow: 0 12px 32px rgba(239,68,68,0.4);
     }
+
     #status {
-      font-size: 1.3rem; font-weight: 800; margin-bottom: 12px;
-      background: linear-gradient(90deg, var(--text), var(--dim));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 2.2em;
     }
-    #status.available {
-      color: var(--accent-glow) !important;
-      animation: neonPulse 1.5s infinite alternate, shake 0.5s;
-      text-shadow: 0 0 40px var(--accent-glow);
+
+    #status.hit {
+      background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: flow 3s linear infinite;
     }
-    @keyframes neonPulse {
-      from { filter: drop-shadow(0 0 10px var(--accent)); }
-      to { filter: drop-shadow(0 0 30px var(--accent-glow)); }
+
+    @keyframes flow {
+      0%   { background-position: 0% }
+      100% { background-position: 200% }
     }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
+
+    .found-item {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.35);
+      padding: 16px 20px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7) translateY(30px); opacity: 0; }
+      70% { transform: scale(1.08) translateY(-6px); }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .found-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     #foundContainer {
-      max-height: 400px; overflow-y: auto; padding-right: 12px;
-      scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 8px;
     }
-    #foundContainer::-webkit-scrollbar { width: 8px; }
+
+    #foundContainer::-webkit-scrollbar {
+      width: 7px;
+    }
+
     #foundContainer::-webkit-scrollbar-thumb {
       background: linear-gradient(var(--accent), var(--accent-glow));
       border-radius: 4px;
     }
 
-    .found-item {
-      background: rgba(16,185,129,0.2); backdrop-filter: blur(15px);
-      padding: 20px; border-radius: 20px; display: flex;
-      justify-content: space-between; align-items: center;
-      margin-bottom: 16px; border: 2px solid var(--accent-glow);
-      animation: explodeIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: var(--neon-glow);
-    }
-    @keyframes explodeIn {
-      0% { 
-        opacity: 0; transform: scale(0) rotate(180deg) translateY(50px);
-      }
-      60% { 
-        opacity: 1; transform: scale(1.1) rotate(-10deg) translateY(-10px);
-      }
-      100% { 
-        transform: scale(1) rotate(0deg) translateY(0);
-      }
-    }
-
-    .live-feed {
-      background: rgba(20,20,35,0.9); border-radius: 16px;
-      padding: 16px; margin: 20px 0; max-height: 200px;
-      overflow-y: auto; font-family: 'Courier New', monospace;
-      border-left: 4px solid var(--accent);
-    }
-
     .footer {
-      text-align: center; font-size: 0.9rem; color: var(--dim);
-      padding: 28px 24px; border-top: 1px solid var(--card-border);
+      text-align: center;
+      padding: 24px 20px;
+      color: var(--dim);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(120,100,255,0.12);
+    }
+
+    canvas#confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
     }
 
     @media (max-width: 500px) {
-      body { padding: 8px; }
-      .container { border-radius: 24px; }
-      button { padding: 16px; font-size: 1rem; }
+      header { padding: 16px 20px 12px; }
+      h1 { font-size: 1.8rem; }
+      .content { padding: 20px; }
+      #startBtn { font-size: 1.1rem; padding: 16px; }
     }
   </style>
 </head>
-
 <body>
-  <!-- PARTICLE SYSTEM -->
-  <div class="particles" id="particles"></div>
 
-  <div class="container">
-    <div class="header">
-      <h1>🔥 Rbx Name Sniper</h1>
+<canvas id="confetti"></canvas>
+
+<div class="container">
+  <header>
+    <h1>RBLX Sniper</h1>
+    <div class="status-badge" id="statusBadge">Idle</div>
+  </header>
+
+  <div class="segmented">
+    <button class="segment-btn active" data-panel="main">Snipe</button>
+    <button class="segment-btn" data-panel="lookup">Lookup</button>
+    <button class="segment-btn" data-panel="tools">Tools</button>
+  </div>
+
+  <div class="content" id="mainPanel">
+    <div class="group">
+      <label>Length <span id="lenVal">5</span></label>
+      <input type="range" id="length" min="3" max="16" value="5">
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="sniper">🎯 Sniper</button>
-      <button class="tab-btn" data-tab="search">🔍 User Search</button>
+    <div class="group">
+      <label>Delay <span id="delayVal">900</span> ms</label>
+      <input type="range" id="delay" min="300" max="2500" step="100" value="900">
     </div>
 
-    <div id="sniper" class="tab-content active">
-      <label>Length: <span id="lenVal">5</span></label>
-      <input type="range" id="lengthSlider" min="3" max="20" value="5">
-
-      <label>Speed (ms): <span id="speedVal">800</span></label>
-      <input type="range" id="speedSlider" min="200" max="2000" step="50" value="800">
-
-      <input id="prefix" placeholder="Prefix (e.g. xX)" maxlength="4">
-      <input id="suffix" placeholder="Suffix (e.g. _OG)" maxlength="4">
-      <input id="pattern" placeholder="Pattern (god??, rblxX?)">
-
-      <div style="display:flex; gap:20px; flex-wrap:wrap; margin:20px 0;">
-        <label style="display:flex; align-items:center; font-size:0.95rem; color:var(--dim); flex:1;">
-          <input type="checkbox" id="fastMode" checked> 🚀 Fast Mode (A-Z0-9)
-        </label>
-        <label style="display:flex; align-items:center; font-size:0.95rem; color:var(--dim); flex:1;">
-          <input type="range" id="volumeSlider" min="0" max="100" value="50" style="width:60px;"> Sound
-        </label>
-      </div>
-
-      <input type="file" id="wordlist" accept=".txt" style="display:none;">
-      <button class="main-btn secondary" onclick="document.getElementById('wordlist').click()">
-        📁 Upload Wordlist
-      </button>
-
-      <input id="webhook" placeholder="🔗 Discord Webhook (optional)">
-
-      <button id="startBtn" class="main-btn" onclick="toggleSniper()">🚀 START SNIPING</button>
-
-      <div class="status">
-        <div id="status">Idle — Ready to hunt rare names 🔥</div>
-        <div id="stats">Scanned: 0 • Found: 0 • No hits yet</div>
-        <div id="extraStats">CPM: 0 • Time: 00:00</div>
-      </div>
-
-      <div class="live-feed" id="liveFeed">
-        <div>💤 Waiting to start...</div>
-      </div>
-
-      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:24px 0;">
-        <button class="secondary-btn" onclick="clearFound()" style="background:var(--warning); color:white;">
-          🗑️ Clear List
-        </button>
-        <button class="secondary-btn" onclick="exportTxt()" style="background:#8b5cf6; color:white;">
-          💾 Export TXT
-        </button>
-      </div>
-
-      <div id="foundContainer">
-        <div id="foundList"></div>
-      </div>
+    <div class="group">
+      <label>Pattern / prefix</label>
+      <input type="text" id="pattern" placeholder="e.g. god??   xX_   RBLX">
     </div>
 
-    <div id="search" class="tab-content">
-      <input id="searchUsername" placeholder="👤 Enter username to lookup">
-      <button class="main-btn" onclick="searchUser()">🔍 SEARCH USER</button>
-      <div id="searchResult" class="status">
-        Enter a username above 👆
-      </div>
+    <div class="row">
+      <button class="preset-btn" onclick="setPreset(3)">3 char</button>
+      <button class="preset-btn" onclick="setPreset(4)">4 char</button>
+      <button class="preset-btn" onclick="setPreset('num4')">4 numbers</button>
+      <button class="preset-btn" onclick="setPreset('rare')">Rare style</button>
     </div>
 
-    <div class="footer">
-      Ultimate 2026 Edition • Made for Sammie in Columbus, OH 🌃 • 06:22 AM EST
+    <button id="startBtn">START SNIPING</button>
+
+    <div id="status">Ready to hunt • 06:31 AM EST</div>
+
+    <div style="margin:24px 0; font-size:0.95rem; color:var(--dim); text-align:center;">
+      <div>Scanned: <span id="scanned">0</span></div>
+      <div>Found: <span id="foundCount">0</span></div>
+      <div id="speedometer">0.0 / sec</div>
+    </div>
+
+    <div id="foundContainer"></div>
+  </div>
+
+  <div class="content" id="lookupPanel" style="display:none">
+    <div class="group">
+      <label>Username</label>
+      <input type="text" id="lookupName" placeholder="Enter username">
+    </div>
+    <button style="width:100%; background:#3b82f6; color:white; padding:16px; border:none; border-radius:16px; font-weight:600; cursor:pointer;">
+      Lookup User ID
+    </button>
+    <div id="lookupResult" style="margin-top:20px; min-height:80px; color:var(--dim);"></div>
+  </div>
+
+  <div class="content" id="toolsPanel" style="display:none">
+    <div style="text-align:center; padding:60px 0; color:var(--dim); font-size:1.1rem;">
+      More features coming soon...<br><br>
+      • Wordlist upload<br>
+      • Discord webhook<br>
+      • Auto-copy toggle<br>
+      • Sound on hit<br>
+      • Export hits
     </div>
   </div>
 
-  <script>
-    // GLOBALS
-    let scanned = 0, found = 0, running = false, startTime = null, wordlist = [];
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // fast mode default
-    const proxy = "https://auth.roproxy.com";
-    const usersProxy = "https://users.roproxy.com";
-    const birthday = "2000-01-01";
-    let cpmInterval, feedLines = [];
+  <div class="footer">
+    Columbus, Ohio • February 04, 2026 • 06:31 AM EST
+  </div>
+</div>
 
-    // ELEMENTS
-    const lengthSlider = document.getElementById("lengthSlider");
-    const speedSlider = document.getElementById("speedSlider");
-    const lenVal = document.getElementById("lenVal");
-    const speedVal = document.getElementById("speedVal");
-    const fastMode = document.getElementById("fastMode");
-    const volumeSlider = document.getElementById("volumeSlider");
-    const statusEl = document.getElementById("status");
-    const statsEl = document.getElementById("stats");
-    const extraEl = document.getElementById("extraStats");
-    const foundList = document.getElementById("foundList");
-    const liveFeed = document.getElementById("liveFeed");
-    const foundContainer = document.getElementById("foundContainer");
+<script>
+// ──────────────────────────────────────────────
+//  Control logic
+// ──────────────────────────────────────────────
 
-    // EVENT LISTENERS
-    lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
-    speedSlider.oninput = () => speedVal.textContent = speedSlider.value;
-    fastMode.onchange = updateCharset;
+const panels = {
+  main: document.getElementById('mainPanel'),
+  lookup: document.getElementById('lookupPanel'),
+  tools: document.getElementById('toolsPanel')
+};
 
-    function updateCharset() {
-      chars = fastMode.checked ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" : "abcdefghijklmnopqrstuvwxyz0123456789_";
+document.querySelectorAll('.segment-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    Object.values(panels).forEach(p => p.style.display = 'none');
+    panels[btn.dataset.panel].style.display = 'block';
+  };
+});
+
+const lengthSlider   = document.getElementById('length');
+const delaySlider    = document.getElementById('delay');
+const lenVal         = document.getElementById('lenVal');
+const delayVal       = document.getElementById('delayVal');
+const patternInput   = document.getElementById('pattern');
+const startBtn       = document.getElementById('startBtn');
+const statusEl       = document.getElementById('status');
+const scannedEl      = document.getElementById('scanned');
+const foundEl        = document.getElementById('foundCount');
+const speedEl        = document.getElementById('speedometer');
+const badge          = document.getElementById('statusBadge');
+
+let running = false;
+let scanned = 0;
+let found   = 0;
+let lastTime = performance.now();
+let checksThisSec = 0;
+
+lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
+delaySlider.oninput  = () => delayVal.textContent  = delaySlider.value;
+
+function setPreset(v) {
+  if (v === 'num4') {
+    patternInput.value = '????';
+    lengthSlider.value = 4; lenVal.textContent = 4;
+  } else if (v === 'rare') {
+    patternInput.value = 'x?x?x';
+  } else {
+    lengthSlider.value = v;
+    lenVal.textContent = v;
+    patternInput.value = '';
+  }
+}
+
+function randChar() {
+  const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return s[Math.floor(Math.random()*s.length)];
+}
+
+function generateName() {
+  let pat = patternInput.value.trim();
+  if (!pat) {
+    return Array(+lengthSlider.value).fill().map(randChar).join('');
+  }
+  return pat.replace(/\?/g, randChar);
+}
+
+function addFound(name) {
+  found++;
+  foundEl.textContent = found;
+
+  const item = document.createElement('div');
+  item.className = 'found-item';
+  item.innerHTML = `
+    <div class="found-name">${name}</div>
+    <div style="display:flex; gap:12px;">
+      <button onclick="navigator.clipboard.writeText('${name}').then(()=>alert('Copied!'))"
+              style="background:#4ade80; color:black; padding:8px 14px; border:none; border-radius:12px; cursor:pointer;">
+        Copy
+      </button>
+      <a href="https://www.roblox.com/users/profile?username=${encodeURIComponent(name)}" target="_blank"
+         style="background:#3b82f6; color:white; padding:8px 14px; border-radius:12px; text-decoration:none;">
+        Profile
+      </a>
+    </div>
+  `;
+  document.getElementById('foundContainer').prepend(item);
+
+  // trigger confetti
+  confetti({
+    particleCount: 80,
+    spread: 80,
+    origin: { y: 0.6 },
+    colors: ['#22c55e', '#4ade80', '#86efac', '#a78bfa']
+  });
+}
+
+async function check(name) {
+  try {
+    const r = await fetch(`https://auth.roproxy.com/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=2000-01-01`);
+    const j = await r.json();
+    return j.code === 0;
+  } catch {
+    return false;
+  }
+}
+
+function updateSpeed() {
+  const now = performance.now();
+  const dt = now - lastTime;
+  if (dt > 1000) {
+    speedEl.textContent = (checksThisSec / (dt/1000)).toFixed(1) + ' / sec';
+    checksThisSec = 0;
+    lastTime = now;
+  }
+}
+
+startBtn.onclick = async () => {
+  running = !running;
+  startBtn.textContent = running ? 'STOP' : 'START SNIPING';
+  startBtn.classList.toggle('stop', running);
+  badge.textContent = running ? 'Scanning…' : 'Idle';
+
+  if (!running) {
+    statusEl.textContent = 'Stopped';
+    return;
+  }
+
+  statusEl.textContent = 'Starting scan...';
+  scanned = found = 0;
+  scannedEl.textContent = foundEl.textContent = '0';
+  document.getElementById('foundContainer').innerHTML = '';
+
+  while (running) {
+    const name = generateName();
+    scanned++;
+    scannedEl.textContent = scanned;
+    checksThisSec++;
+
+    statusEl.textContent = `Checking ${name} …`;
+
+    const available = await check(name);
+
+    if (available) {
+      statusEl.classList.add('hit');
+      statusEl.textContent = `HIT → ${name}`;
+      addFound(name);
+      setTimeout(() => statusEl.classList.remove('hit'), 2200);
     }
 
-    // PARTICLES
-    function createParticles() {
-      const particles = document.getElementById("particles");
-      for(let i = 0; i < 50; i++) {
-        const p = document.createElement("div");
-        p.className = "particle";
-        p.style.left = Math.random() * 100 + "%";
-        p.style.animationDelay = Math.random() * 6 + "s";
-        p.style.animationDuration = (Math.random() * 3 + 4) + "s";
-        particles.appendChild(p);
-      }
-    }
+    updateSpeed();
 
-    // TABS
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(btn.dataset.tab).classList.add('active');
-        btn.classList.add('active');
-      };
+    await new Promise(r => setTimeout(r, parseInt(delaySlider.value)));
+  }
+};
+
+// minimal confetti function
+function confetti(opts) {
+  const c = document.getElementById('confetti');
+  const ctx = c.getContext('2d');
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+
+  let particles = [];
+  for (let i = 0; i < opts.particleCount; i++) {
+    particles.push({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height * 0.4,
+      r: Math.random() * 5 + 3,
+      color: opts.colors[Math.floor(Math.random() * opts.colors.length)],
+      vx: (Math.random() - 0.5) * opts.spread / 10,
+      vy: Math.random() * 4 + 2,
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 10
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    particles.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+      ctx.restore();
+
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.vy += 0.18; // gravity
+      if (p.y > c.height) p.y = -20;
     });
 
-    // GENERATION
-    function rand() { return chars[Math.floor(Math.random() * chars.length)]; }
-    function gen() {
-      let len = parseInt(lengthSlider.value);
-      let prefix = document.getElementById("prefix").value.toUpperCase();
-      let suffix = document.getElementById("suffix").value.toUpperCase();
-      let pattern = document.getElementById("pattern").value.toUpperCase().trim();
-      
-      let name = "";
-      if (pattern) {
-        name = [...pattern].map(c => c === "?" ? rand() : c).join("");
-      } else {
-        name = Array.from({length: len}, rand).join("");
-      }
-      return prefix + name + suffix;
+    if (particles.some(p => p.y < c.height + 50)) {
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, c.width, c.height);
     }
+  }
 
-    // CHECK
-    async function check(name) {
-      try {
-        let r = await fetch(`${proxy}/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=${birthday}`, { 
-          cache: "no-store", 
-          mode: 'cors'
-        });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        let j = await r.json();
-        return j.code === 0;
-      } catch (e) {
-        return false;
-      }
-    }
+  draw();
+}
 
-    // WEBHOOK
-    function sendWebhook(name) {
-      let url = document.getElementById("webhook").value.trim();
-      if (!url) return;
-      fetch(url, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: `🎯 **SNIPED!** \`${name}\` (${name.length} chars)\n${new Date().toLocaleTimeString()}\nSpeed: ${speedSlider.value}ms`
-        })
-      }).catch(() => {});
-    }
-
-    // SOUND
-    function playSound() {
-      let vol = volumeSlider.value / 100;
-      const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQBDYgA=");
-      audio.volume = vol;
-      audio.play().catch(() => {});
-    }
-
-    // ADD FOUND
-    function addFound(n) {
-      let d = document.createElement("div");
-      d.className = "found-item";
-      d.innerHTML = `
-        <div style="font-weight:900; font-size:1.3rem;">🎉 ${n}</div>
-        <div>
-          <button onclick="navigator.clipboard.writeText('${n}').then(()=>alert('✅ Copied!'))" 
-                  style="margin-right:8px; background:var(--accent-glow);">📋 Copy</button>
-          <a href="https://www.roblox.com/users/profile?username=${n}" target="_blank" 
-             style="background:#3b82f6; color:white; padding:10px 16px; text-decoration:none; border-radius:12px;">
-            ⚡ Claim
-          </a>
-        </div>
-      `;
-      foundList.prepend(d);
-      if (foundList.children.length > 15) foundList.removeChild(foundList.lastChild);
-      foundContainer.scrollTop = 0;
-      navigator.clipboard.writeText(n);
-      playSound();
-    }
-
-    // LIVE FEED
-    function addFeed(msg) {
-      feedLines.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
-      if (feedLines.length > 50) feedLines.pop();
-      liveFeed.innerHTML = feedLines.map(line => `<div>${line}</div>`).join('');
-      liveFeed.scrollTop = 0;
-    }
-
-    // STATS
-    function updateStats() {
-      if (!startTime) return;
-      let elapsed = (Date.now() - startTime) / 1000 / 60;
-      let cpm = Math.round((scanned / (elapsed || 1)) * 10) / 10;
-      let min = Math.floor(elapsed).toString().padStart(2,'0');
-      let sec = Math.floor((elapsed % 1) * 60).toString().padStart(2,'0');
-      extraEl.textContent = `⚡ CPM: ${cpm} • ⏱️ ${min}:${sec}`;
-      statsEl.textContent = `📊 Scanned: ${scanned.toLocaleString()} • 🎯 Found: ${found}`;
-    }
-
-    // CLEAR/EXPORT
-    function clearFound() { foundList.innerHTML = ""; }
-    function exportTxt() {
-      let names = Array.from(foundList.querySelectorAll('.found-item div:first-child')).map(d => d.textContent.replace('🎉 ', '')).join('\n');
-      if (!names) { alert('No hits yet!'); return; }
-      const blob = new Blob([names], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `rbxsniper_hits_${new Date().toISOString().slice(0,10)}.txt`;
-      a.click(); URL.revokeObjectURL(url);
-    }
-
-    // WORDLIST
-    document.getElementById("wordlist").onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          wordlist = ev.target.result.split('\n').map(w => w.trim()).filter(w => w);
-          addFeed(`📁 Loaded ${wordlist.length} words from wordlist`);
-        };
-        reader.readAsText(file);
-      }
-    };
-
-    // MAIN TOGGLE
-    async function toggleSniper() {
-      running = !running;
-      const btn = document.getElementById("startBtn");
-      
-      if (running) {
-        startTime = Date.now();
-        scanned = found = 0; feedLines = ["🚀 SNIPING STARTED!"];
-        btn.textContent = "⏹️ STOP SNIPING";
-        btn.classList.add("stop");
-        statusEl.textContent = "🔥 HUNTING...";
-        cpmInterval = setInterval(updateStats, 1000);
-        addFeed("🔥 Fast mode enabled");
-
-        while (running) {
-          let name = wordlist.length ? wordlist[Math.floor(Math.random() * wordlist.length)] : gen();
-          scanned++;
-          
-          statusEl.innerHTML = `⚡ Checking <strong>${name}</strong>...`;
-          addFeed(`🔍 Testing: ${name}`);
-          
-          let available = await check(name);
-          
-          if (available) {
-            found++;
-            statusEl.textContent = `🎉 HIT! ${name}`;
-            statusEl.classList.add("available");
-            addFound(name);
-            sendWebhook(name);
-            addFeed(`✅ HIT! ${name} (AVAILABLE!)`);
-          } else {
-            statusEl.textContent = "❌ Taken";
-            statusEl.classList.remove("available");
-          }
-          
-          updateStats();
-          await new Promise(r => setTimeout(r, Math.max(200, parseInt(speedSlider.value))));
-        }
-      } else {
-        clearInterval(cpmInterval);
-        btn.textContent = "🚀 START SNIPING";
-        btn.classList.remove("stop");
-        statusEl.textContent = "⏸️ Stopped — Ready for next hunt";
-        addFeed("⏹️ Sniping stopped");
-      }
-    }
-
-    // USER SEARCH
-    async function searchUser() {
-      const username = document.getElementById("searchUsername").value.trim();
-      const result = document.getElementById("searchResult");
-      if (!username) return result.innerHTML = "👤 Enter username";
-      
-      result.innerHTML = `<span style="animation:spin 1s linear infinite;">⏳</span> Searching...`;
-      
-      try {
-        const r = await fetch(`${usersProxy}/v1/usernames/users`, {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ usernames: [username], excludeBannedUsers: false })
-        });
-        const j = await r.json();
-        if (j.data?.length) {
-          const user = j.data[0];
-          result.innerHTML = `
-            ✅ <strong>FOUND!</strong><br>
-            👤 Username: ${user.requestedUsername}<br>
-            🆔 ID: <strong>${user.id}</strong><br>
-            🏅 Verified: ${user.hasVerifiedBadge ? '✅ YES' : '❌ No'}
-          `;
-        } else {
-          result.innerHTML = `❌ No user "${username}" found`;
-        }
-      } catch (e) {
-        result.innerHTML = `💥 Error: ${e.message}`;
-      }
-    }
-
-    // INIT
-    createParticles();
-    updateCharset();
-    updateStats();
-  </script>
+window.addEventListener('resize', () => {
+  const c = document.getElementById('confetti');
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+});
+</script>
 </body>
 </html>
