@@ -222,11 +222,11 @@ button.stop:hover { box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
     <label>Username length: <span id="lenVal">5</span></label>
     <input type="range" id="lengthSlider" min="3" max="20" value="5">
 
-    <label>Scan speed (ms delay): <span id="speedVal">1200</span></label>
-    <input type="range" id="speedSlider" min="200" max="3000" step="50" value="1200">
+    <label>Scan speed (ms delay): <span id="speedVal">2000</span></label>
+    <input type="range" id="speedSlider" min="500" max="6000" step="100" value="2000">
 
-    <input id="pattern" placeholder="Pattern (ab??, x?x?)" type="text">
-    <input id="webhook" placeholder="Paste your Discord webhook (optional)" type="text">
+    <input id="pattern" placeholder="Pattern (ab??, x?x?, 420??)" type="text">
+    <input id="webhook" placeholder="Discord webhook URL (optional)" type="text">
 
     <button id="startBtn">Start Scanning</button>
 
@@ -239,7 +239,7 @@ button.stop:hover { box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
   </div>
 
   <div class="footer">
-    made by Aceii_ • discord.gg/kAAhfyKdvC
+    made with ❤️ by Aceii_ • discord.gg/kAAhfyKdvC
   </div>
 </div>
 
@@ -252,16 +252,17 @@ const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 const statusEl = document.getElementById("status");
 const statsEl = document.getElementById("stats");
 const foundList = document.getElementById("foundList");
+
 const proxy = "https://auth.roproxy.com";
 const birthday = "2000-01-01";
 
 const lengthSlider = document.getElementById("lengthSlider");
 const speedSlider = document.getElementById("speedSlider");
-const lenVal = document.getElementById("lenVal");
-const speedVal = document.getElementById("speedVal");
+const lenVal   = document.getElementById("lenVal");
+const speedVal  = document.getElementById("speedVal");
 
 lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
-speedSlider.oninput = () => speedVal.textContent = speedSlider.value;
+speedSlider.oninput  = () => speedVal.textContent  = speedSlider.value;
 
 function rand() {
   return chars[Math.floor(Math.random() * chars.length)];
@@ -269,38 +270,39 @@ function rand() {
 
 function gen() {
   const len = parseInt(lengthSlider.value);
-  const p = document.getElementById("pattern").value.toLowerCase().trim();
-  if (p) {
-    return [...p].map(c => c === "?" ? rand() : c).join("");
+  const pattern = document.getElementById("pattern").value.trim().toLowerCase();
+  if (pattern) {
+    return [...pattern].map(c => c === "?" ? rand() : c).join("");
   }
-  return Array.from({length: len}, rand).join("");
+  return Array(len).fill().map(rand).join("");
 }
 
 function addFound(name) {
-  const d = document.createElement("div");
-  d.className = "found-item";
-  d.innerHTML = `<span>${name}</span><button onclick="navigator.clipboard.writeText('${name}')">Copy</button>`;
-  foundList.prepend(d);
-  if (foundList.children.length > 6) foundList.removeChild(foundList.lastChild);
+  const div = document.createElement("div");
+  div.className = "found-item";
+  div.innerHTML = `<span>${name}</span><button onclick="navigator.clipboard.writeText('${name}')">Copy</button>`;
+  foundList.prepend(div);
+  if (foundList.children.length > 7) foundList.removeChild(foundList.lastChild);
 }
 
 async function check(name) {
   try {
-    const response = await fetch(`${proxy}/v1/usernames/validate`, {
+    const res = await fetch(`${proxy}/v1/usernames/validate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: name,
-        birthday: birthday
-      })
+      body: JSON.stringify({ username: name, birthday })
     });
 
-    if (!response.ok) return false;
+    if (!res.ok) {
+      console.log(`HTTP ${res.status} for ${name}`);
+      return false;
+    }
 
-    const json = await response.json();
-    return json.code === 0;  // 0 = available
+    const json = await res.json();
+    console.log(`${name} → code: ${json.code} | msg: ${json.message || "(no message)"}`);
+    return json.code === 0;
   } catch (err) {
-    console.error("Check failed:", err);
+    console.error("Fetch error:", name, err);
     return false;
   }
 }
@@ -313,9 +315,9 @@ function sendWebhook(name) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      content: `✅ **Available Roblox Username:** \`${name}\`\n🚀 Join our server: https://discord.gg/kAAhfyKdvC`
+      content: `🎯 **Available Roblox Username Found!**\n\`${name}\` (length ${name.length})\nhttps://discord.gg/kAAhfyKdvC`
     })
-  }).catch(err => console.error("Webhook failed:", err));
+  }).catch(e => console.log("Webhook failed:", e));
 }
 
 async function toggle() {
@@ -329,9 +331,9 @@ async function toggle() {
     scanned++;
     statusEl.innerHTML = `<span class="spinner"></span>Checking ${name}...`;
 
-    const available = await check(name);
+    const isAvailable = await check(name);
 
-    if (available) {
+    if (isAvailable) {
       found++;
       statusEl.textContent = `AVAILABLE → ${name}`;
       statusEl.classList.add("available");
@@ -344,12 +346,11 @@ async function toggle() {
 
     statsEl.textContent = `Scanned: ${scanned} • Found: ${found}`;
 
-    await new Promise(r => setTimeout(r, parseInt(speedSlider.value)));
+    await new Promise(r => setTimeout(r, parseInt(speedSlider.value) || 2000));
   }
 }
 
 document.getElementById("startBtn").onclick = toggle;
 </script>
-
 </body>
 </html>
