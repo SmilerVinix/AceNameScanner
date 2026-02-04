@@ -1,128 +1,289 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RBX Name Sniper • Fast & Clean</title>
 
-<title>RBX Name Sniper</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card: #111118;
+      --card-light: #1a1a24;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --accent: #22c55e;
+      --accent-dark: #16a34a;
+      --danger: #ef4444;
+      --danger-dark: #dc2626;
+      --border: rgba(255,255,255,0.08);
+      --glow: rgba(34,197,94,0.18);
+    }
 
-<style>
-body {
-  margin: 0;
-  background: #0e0e0e;
-  color: white;
-  font-family: Arial, sans-serif;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.container {
-  max-width: 420px;
-  margin: 20px auto;
-  background: #1b1b1b;
-  padding: 15px;
-  border-radius: 10px;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 16px;
+      line-height: 1.5;
+    }
 
-h2 {
-  margin-top: 0;
-  text-align: center;
-}
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
 
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  font-size: 14px;
-  background: #2f2f2f;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
+    .header {
+      padding: 20px 24px;
+      background: linear-gradient(to bottom, #16161f, transparent);
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
 
-button.green { background: #22c55e; }
-button.red { background: #ef4444; }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #a1e65c, #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-.row {
-  display: flex;
-  gap: 6px;
-}
+    .content {
+      padding: 20px 24px 24px;
+    }
 
-.row button {
-  flex: 1;
-}
+    .len-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  background: #2a2a2a;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
+    button {
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #1e1e2e;
+      color: var(--text-dim);
+    }
 
-.status {
-  margin-top: 10px;
-  font-weight: bold;
-}
+    button:hover {
+      background: #25253a;
+      transform: translateY(-1px);
+    }
 
-.stats {
-  margin-top: 5px;
-  font-size: 13px;
-  opacity: 0.8;
-}
+    button.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 0 3px var(--glow);
+    }
 
-.footer {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.6;
-}
-</style>
+    button.stop {
+      background: var(--danger);
+      color: white;
+    }
+
+    button.stop:hover {
+      background: var(--danger-dark);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 8px 0 20px;
+      background: #16161f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .main-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      border-radius: 12px;
+    }
+
+    .status-panel {
+      background: rgba(30,30,46,0.6);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    #status {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      min-height: 1.4em;
+    }
+
+    #status.available {
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(34,197,94,0.5);
+    }
+
+    #stats {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+
+    .found-list {
+      margin: 16px 0;
+    }
+
+    .found-list h3 {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .found-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e1e2e;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .found-item button {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      background: var(--accent-dark);
+      color: white;
+      min-width: 70px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      opacity: 0.7;
+      border-top: 1px solid var(--border);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      .container { border-radius: 12px; }
+      .content { padding: 18px 20px 20px; }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="container">
-  <h2>RBX Name Sniper</h2>
-
-  <div class="row">
-    <button onclick="setLen(3,5)">3–5</button>
-    <button onclick="setLen(4,6)">4–6</button>
-    <button onclick="setLen(5,7)">5–7</button>
+  <div class="header">
+    <h1>RBX Name Sniper</h1>
   </div>
 
-  <input id="pattern" placeholder="Pattern (example: ab??)">
+  <div class="content">
 
-  <button id="startBtn" class="green" onclick="toggle()">Start Scanning</button>
+    <div class="len-buttons">
+      <button onclick="setLen(3,5)" class="active">3–5</button>
+      <button onclick="setLen(4,6)">4–6</button>
+      <button onclick="setLen(5,7)">5–7</button>
+    </div>
 
-  <div class="status" id="status">Idle</div>
-  <div class="stats" id="stats">📊 Scanned: 0 | ✅ Found: 0</div>
+    <input id="pattern" placeholder="Pattern (e.g. cat?? , nitro3?, ???v)" />
 
-  <button onclick="copyName()">📋 Copy Available</button>
+    <button id="startBtn" class="main-btn green" onclick="toggle()">
+      Start Scanning
+    </button>
 
-  <div class="footer">this was made by m7</div>
+    <div class="status-panel">
+      <div id="status">Idle</div>
+      <div id="stats">Scanned: 0  •  Found: 0</div>
+    </div>
+
+    <div class="found-list" id="foundList">
+      <h3>Recently Found</h3>
+      <!-- items added here dynamically -->
+    </div>
+
+  </div>
+
+  <div class="footer">made by m7 • 2026</div>
 </div>
 
 <script>
 let min = 3, max = 5;
 let running = false;
 let scanned = 0;
-let found = 0;
-let last = null;
+let foundCount = 0;
+let foundNames = []; // keep last 5
 
 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+const statusEl = document.getElementById("status");
+const statsEl  = document.getElementById("stats");
+const startBtn = document.getElementById("startBtn");
+const foundList = document.getElementById("foundList");
+const patternInput = document.getElementById("pattern");
 
-function setLen(a,b){
-  min = a;
-  max = b;
+function setLen(a, b) {
+  min = a; max = b;
+  document.querySelectorAll('.len-buttons button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
 }
 
-function randChar(){
+function randChar() {
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
-function generate(){
-  const p = document.getElementById("pattern").value.toLowerCase();
+function generate() {
+  const p = patternInput.value.trim().toLowerCase();
   if (p) {
     let out = "";
     for (let c of p) {
@@ -136,16 +297,43 @@ function generate(){
   return s;
 }
 
-async function toggle(){
+function addFound(name) {
+  foundNames.unshift(name);
+  if (foundNames.length > 5) foundNames.pop();
+
+  foundList.innerHTML = `<h3>Recently Found</h3>`;
+  foundNames.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "found-item";
+    div.innerHTML = `
+      <span>${n}</span>
+      <button onclick="navigator.clipboard.writeText('${n}')">Copy</button>
+    `;
+    foundList.appendChild(div);
+  });
+}
+
+async function toggle() {
   running = !running;
-  const btn = document.getElementById("startBtn");
-  btn.textContent = running ? "Stop Scanning" : "Start Scanning";
-  btn.className = running ? "red" : "green";
+
+  if (running) {
+    startBtn.textContent = "Stop Scanning";
+    startBtn.classList.remove("green");
+    startBtn.classList.add("stop");
+  } else {
+    startBtn.textContent = "Start Scanning";
+    startBtn.classList.remove("stop");
+    startBtn.classList.add("green");
+    statusEl.innerHTML = "Idle";
+    statusEl.classList.remove("available");
+  }
 
   while (running) {
     const name = generate();
     scanned++;
     updateStats();
+
+    statusEl.innerHTML = `<span class="spinner"></span>Checking ${name}...`;
 
     try {
       const r = await fetch("/api/check", {
@@ -154,28 +342,26 @@ async function toggle(){
         body: JSON.stringify({ u: name })
       });
 
+      if (!r.ok) throw new Error();
+
       const j = await r.json();
       if (j.available) {
-        found++;
-        last = name;
-        document.getElementById("status").textContent =
-          "AVAILABLE: " + name;
+        foundCount++;
+        statusEl.textContent = `AVAILABLE → ${name}`;
+        statusEl.classList.add("available");
+        addFound(name);
+        updateStats();
       }
-    } catch (e) {}
+    } catch (e) {
+      // silent fail
+    }
 
-    await new Promise(r => setTimeout(r, 900));
+    await new Promise(r => setTimeout(r, 920)); // ~1 req/sec
   }
 }
 
-function updateStats(){
-  document.getElementById("stats").textContent =
-    `📊 Scanned: ${scanned} | ✅ Found: ${found}`;
-}
-
-function copyName(){
-  if (last) {
-    navigator.clipboard.writeText(last);
-  }
+function updateStats() {
+  statsEl.textContent = `Scanned: ${scanned.toLocaleString()}  •  Found: ${foundCount}`;
 }
 </script>
 
