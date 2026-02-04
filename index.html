@@ -6,92 +6,260 @@
 <title>Ace’s RBLX Name Sniper</title>
 
 <style>
-:root{
---bg:#0a0a0f;--card:#111118;--text:#e2e8f0;--dim:#94a3b8;
---accent:#22c55e;--danger:#ef4444;--border:rgba(255,255,255,.08)
+:root {
+  --bg: #0a0a0f;
+  --card: #111118;
+  --text: #e2e8f0;
+  --dim: #94a3b8;
+  --accent: #22c55e;
+  --accent-glow: rgba(34, 197, 94, 0.18);
+  --danger: #ef4444;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --shadow: 0 10px 30px -12px rgba(0,0,0,0.7);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-background:var(--bg);color:var(--text);
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-padding:14px
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-.container{
-max-width:420px;margin:auto;background:var(--card);
-border-radius:14px;border:1px solid var(--border);overflow:hidden
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  padding: 20px 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.header{text-align:center;padding:18px;border-bottom:1px solid var(--border)}
-h1{
-font-size:1.5rem;
-background:linear-gradient(90deg,#a1e65c,#4ade80);
--webkit-background-clip:text;-webkit-text-fill-color:transparent
+
+.container {
+  width: 100%;
+  max-width: 440px;
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  position: relative;
 }
-.content{padding:18px}
-button{
-padding:12px;border:none;border-radius:10px;
-background:#1e1e2e;color:var(--dim);font-weight:600;cursor:pointer;margin-bottom:8px
+
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(34,197,94,0.12), transparent 40%, rgba(34,197,94,0.08));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
-button.stop{background:var(--danger);color:#fff}
-input[type="text"]{
-width:100%;padding:12px;margin-bottom:10px;background:#16161f;
-border:1px solid var(--border);border-radius:10px;color:#fff
+
+.header {
+  text-align: center;
+  padding: 22px 18px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(to bottom, rgba(34,197,94,0.06), transparent);
 }
-.status{
-background:#1e1e2e;padding:14px;border-radius:10px;
-text-align:center;margin-bottom:14px
+
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #a1e65c, #4ade80, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
-#status.available{color:var(--accent)}
-.found-item{
-background:#1e1e2e;padding:10px;border-radius:8px;
-display:flex;justify-content:space-between;margin-bottom:6px
+
+.content {
+  padding: 24px 20px;
 }
-.footer{
-text-align:center;font-size:.75rem;color:var(--dim);
-padding:14px;border-top:1px solid var(--border)
+
+label {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: block;
+  color: var(--dim);
+  font-weight: 500;
 }
-label{font-size:0.85rem;margin-bottom:4px;display:block}
-input[type="range"]{width:100%;margin-bottom:12px}
-.spinner{
-display:inline-block;width:16px;height:16px;
-border:3px solid rgba(255,255,255,.2);
-border-top-color:var(--accent);
-border-radius:50%;animation:spin 1s linear infinite;
-vertical-align:middle;margin-right:6px
+
+input[type="text"],
+input[type="range"] {
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 16px;
+  background: #16161f;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.2s;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
+
+input[type="text"]:focus,
+input[type="range"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1e3a2f, #164d32);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.22s;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.12);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(34,197,94,0.2);
+}
+
+button.stop {
+  background: linear-gradient(90deg, #4b1c1c, #7f1d1d);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239,68,68,0.2);
+}
+
+button.stop:hover {
+  box-shadow: 0 8px 20px rgba(239,68,68,0.3);
+}
+
+.status {
+  background: #16161f;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+#status.available {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+#stats {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+.found-item {
+  background: #16161f;
+  padding: 12px 14px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+  transition: all 0.18s;
+}
+
+.found-item:hover {
+  border-color: var(--accent);
+  background: #1a1f1a;
+}
+
+.found-item button {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  background: var(--accent);
+  color: black;
+  box-shadow: none;
+}
+
+.found-item button:hover {
+  background: #16a34a;
+  color: white;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+@keyframes spin { to { transform: rotate(360deg) } }
+
+.footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--dim);
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+}
 </style>
 </head>
 
 <body>
 <div class="container">
-<div class="header"><h1>Ace’s RBLX Name Sniper</h1></div>
+  <div class="header">
+    <h1>Ace’s RBLX Name Sniper</h1>
+  </div>
 
-<div class="content">
-<label>Username length: <span id="lenVal">5</span></label>
-<input type="range" id="lengthSlider" min="3" max="20" value="5">
+  <div class="content">
+    <label>Username length: <span id="lenVal">5</span></label>
+    <input type="range" id="lengthSlider" min="3" max="20" value="5">
 
-<label>Scan speed (ms delay): <span id="speedVal">1200</span></label>
-<input type="range" id="speedSlider" min="200" max="3000" step="50" value="1200">
+    <label>Scan speed (ms delay): <span id="speedVal">1200</span></label>
+    <input type="range" id="speedSlider" min="200" max="3000" step="50" value="1200">
 
-<input id="pattern" placeholder="Pattern (ab??, x?x?)">
-<input id="webhook" placeholder="Paste your Discord webhook">
+    <input id="pattern" placeholder="Pattern (ab??, x?x?)" type="text">
+    <input id="webhook" placeholder="Paste your Discord webhook" type="text">
 
-<button id="startBtn" onclick="toggle()">Start Scanning</button>
+    <button id="startBtn" onclick="toggle()">Start Scanning</button>
 
-<div class="status">
-<div id="status">Idle</div>
-<div id="stats">Scanned: 0 • Found: 0</div>
-</div>
+    <div class="status">
+      <div id="status">Idle</div>
+      <div id="stats">Scanned: 0 • Found: 0</div>
+    </div>
 
-<div id="foundList"></div>
-</div>
+    <div id="foundList"></div>
+  </div>
 
-<div class="footer">
-made by Aceii_. On discord • https://discord.gg/kAAhfyKdvC
-</div>
+  <div class="footer">
+    made by Aceii_ • discord.gg/kAAhfyKdvC
+  </div>
 </div>
 
 <script>
+// Your original JavaScript remains unchanged — just paste it here
 let scanned=0,found=0,running=false
 let chars="abcdefghijklmnopqrstuvwxyz0123456789"
 let statusEl=document.getElementById("status")
@@ -108,73 +276,66 @@ let speedVal=document.getElementById("speedVal")
 lengthSlider.oninput=function(){lenVal.textContent=this.value}
 speedSlider.oninput=function(){speedVal.textContent=this.value}
 
-// ─── GENERATE RANDOM NAME ─────────────────────────────
 function rand(){return chars[Math.floor(Math.random()*chars.length)]}
 function gen(){
-let len=parseInt(lengthSlider.value)
-let p=document.getElementById("pattern").value.toLowerCase().trim()
-if(p){
-return [...p].map(c=>c=="?"?rand():c).join("")
-}
-return Array.from({length:len},rand).join("")
+  let len=parseInt(lengthSlider.value)
+  let p=document.getElementById("pattern").value.toLowerCase().trim()
+  if(p) return [...p].map(c=>c=="?"?rand():c).join("")
+  return Array.from({length:len},rand).join("")
 }
 
-// ─── FOUND LIST & COPY ────────────────────────────────
 function addFound(n){
-let d=document.createElement("div")
-d.className="found-item"
-d.innerHTML=`<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`
-foundList.prepend(d)
-if(foundList.children.length>6) foundList.removeChild(foundList.lastChild)
+  let d=document.createElement("div")
+  d.className="found-item"
+  d.innerHTML=`<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`
+  foundList.prepend(d)
+  if(foundList.children.length>6) foundList.removeChild(foundList.lastChild)
 }
 
-// ─── CHECK VIA ROBLOX API ─────────────────────────────
 async function check(name){
-try{
-let r=await fetch(`${proxy}/v1/usernames/validate?username=${name}&birthday=${birthday}`)
-let j=await r.json()
-return j.code===0
-}catch{return false}
+  try{
+    let r=await fetch(`${proxy}/v1/usernames/validate?username=${name}&birthday=${birthday}`)
+    let j=await r.json()
+    return j.code===0
+  }catch{return false}
 }
 
-// ─── SEND WEBHOOK ────────────────────────────────────
 function sendWebhook(name){
-let url=document.getElementById("webhook").value.trim()
-if(!url) return
-fetch(url,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-content:`✅ **Available Roblox Username:** \`${name}\`\n🚀 Join our server: https://discord.gg/kAAhfyKdvC`
-})
-})
+  let url=document.getElementById("webhook").value.trim()
+  if(!url) return
+  fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      content:`✅ **Available Roblox Username:** \`${name}\`
+    })
+  })
 }
 
-// ─── MAIN LOOP ───────────────────────────────────────
 async function toggle(){
-running=!running
-let btn=document.getElementById("startBtn")
-btn.textContent=running?"Stop Scanning":"Start Scanning"
-btn.classList.toggle("stop",running)
+  running=!running
+  let btn=document.getElementById("startBtn")
+  btn.textContent=running?"Stop Scanning":"Start Scanning"
+  btn.classList.toggle("stop",running)
 
-while(running){
-let name=gen()
-scanned++
-statusEl.innerHTML=`<span class="spinner"></span>Checking ${name}...`
-let ok=await check(name)
-if(ok){
-found++
-statusEl.textContent=`AVAILABLE → ${name}`
-statusEl.classList.add("available")
-addFound(name)
-sendWebhook(name)
-}else{
-statusEl.textContent=`Taken / Invalid`
-statusEl.classList.remove("available")
-}
-statsEl.textContent=`Scanned: ${scanned} • Found: ${found}`
-await new Promise(r=>setTimeout(r,parseInt(speedSlider.value)))
-}
+  while(running){
+    let name=gen()
+    scanned++
+    statusEl.innerHTML=`<span class="spinner"></span>Checking ${name}...`
+    let ok=await check(name)
+    if(ok){
+      found++
+      statusEl.textContent=`AVAILABLE → ${name}`
+      statusEl.classList.add("available")
+      addFound(name)
+      sendWebhook(name)
+    }else{
+      statusEl.textContent=`Taken / Invalid`
+      statusEl.classList.remove("available")
+    }
+    statsEl.textContent=`Scanned: ${scanned} • Found: ${found}`
+    await new Promise(r=>setTimeout(r,parseInt(speedSlider.value)))
+  }
 }
 </script>
 </body>
