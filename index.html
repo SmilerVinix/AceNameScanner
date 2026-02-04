@@ -3,386 +3,180 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ace’s RBLX Name Sniper ⚡</title>
+<title>Ace RBX Name Sniper • 2026</title>
 
 <style>
-:root {
-  --bg: #0a0a0f;
-  --card: #111118;
-  --text: #e2e8f0;
-  --dim: #94a3b8;
-  --accent: #22c55e;
-  --danger: #ef4444;
-  --border: rgba(255,255,255,.08);
-  --glow: rgba(34, 197, 94, 0.25);
+:root{
+--bg:#0a0a0f;--card:#111118;--text:#e2e8f0;--dim:#94a3b8;
+--accent:#22c55e;--danger:#ef4444;--border:rgba(255,255,255,.08)
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  min-height: 100vh;
-  padding: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: pageFadeIn 0.8s ease-out forwards;
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+background:var(--bg);color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+padding:14px
 }
-
-@keyframes pageFadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+.container{
+max-width:420px;margin:auto;background:var(--card);
+border-radius:14px;border:1px solid var(--border);overflow:hidden
 }
-
-.container {
-  width: 100%;
-  max-width: 420px;
-  background: var(--card);
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+.header{text-align:center;padding:18px;border-bottom:1px solid var(--border)}
+h1{
+font-size:1.5rem;
+background:linear-gradient(90deg,#a1e65c,#4ade80);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent
 }
-
-.header {
-  text-align: center;
-  padding: 18px;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(to bottom, rgba(34,197,94,0.08), transparent);
+.content{padding:18px}
+.len-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+button{
+padding:12px;border:none;border-radius:10px;
+background:#1e1e2e;color:var(--dim);font-weight:600;cursor:pointer
 }
-
-h1 {
-  font-size: 1.5rem;
-  background: linear-gradient(90deg, #a1e65c, #4ade80);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+button.active{background:var(--accent);color:#fff}
+button.stop{background:var(--danger);color:#fff}
+input{
+width:100%;padding:14px;margin-bottom:14px;
+background:#16161f;border:1px solid var(--border);
+border-radius:10px;color:#fff
 }
-
-.tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
+.main-btn{width:100%;font-size:1.05rem;margin-bottom:14px}
+.status{
+background:#1e1e2e;padding:14px;border-radius:10px;
+text-align:center;margin-bottom:14px
 }
-
-.tab-btn {
-  flex: 1;
-  padding: 12px;
-  background: transparent;
-  border: none;
-  color: var(--dim);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+#status.available{color:var(--accent)}
+.found-item{
+background:#1e1e2e;padding:10px;border-radius:8px;
+display:flex;justify-content:space-between;margin-bottom:6px
 }
-
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom: 3px solid var(--accent);
+.footer{
+text-align:center;font-size:.75rem;color:var(--dim);
+padding:14px;border-top:1px solid var(--border)
 }
-
-.tab-content {
-  padding: 18px;
-  display: none;
+.spinner{
+display:inline-block;width:16px;height:16px;
+border:3px solid rgba(255,255,255,.2);
+border-top-color:var(--accent);
+border-radius:50%;animation:spin 1s linear infinite;
+vertical-align:middle;margin-right:6px
 }
-
-.tab-content.active {
-  display: block;
-}
-
-.len-info {
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-  color: var(--dim);
-}
-
-input[type="range"] {
-  width: 100%;
-  margin-bottom: 14px;
-  accent-color: var(--accent);
-}
-
-input[type="text"] {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
-  background: #16161f;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: white;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--glow);
-}
-
-button {
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #1e1e2e;
-  color: var(--dim);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.22s ease;
-  transform: translateY(0);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-}
-
-button:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-  background: #25253a;
-}
-
-.main-btn {
-  width: 100%;
-  font-size: 1.05rem;
-  margin-bottom: 14px;
-  background: linear-gradient(90deg, #164d32, #1e3a2f);
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.main-btn.running {
-  animation: pulseGlow 2s infinite alternate;
-}
-
-@keyframes pulseGlow {
-  from { box-shadow: 0 0 12px var(--glow); }
-  to   { box-shadow: 0 0 28px var(--glow); }
-}
-
-.status {
-  background: #1e1e2e;
-  padding: 14px;
-  border-radius: 10px;
-  text-align: center;
-  margin-bottom: 14px;
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-}
-
-#status.available {
-  color: var(--accent);
-  font-weight: 600;
-  animation: availablePop 0.4s ease-out;
-}
-
-@keyframes availablePop {
-  0%   { transform: scale(0.92); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.found-item {
-  background: #16161f;
-  padding: 10px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  border: 1px solid var(--border);
-  opacity: 0;
-  transform: translateY(12px);
-  animation: slideUp 0.4s forwards;
-}
-
-@keyframes slideUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.found-item button {
-  padding: 8px 14px;
-  font-size: 0.9rem;
-  background: var(--accent);
-  color: black;
-}
-
-.spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 3px solid rgba(255,255,255,.2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
-@keyframes spin { to { transform: rotate(360deg) } }
-
-.footer {
-  text-align: center;
-  font-size: .75rem;
-  color: var(--dim);
-  padding: 14px;
-  border-top: 1px solid var(--border);
-}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <div class="header">
-<h1>Ace’s RBLX Name Sniper ⚡</h1>
+<h1>RBX Name Sniper</h1>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="openTab('scanner')">Scanner</button>
-  <button class="tab-btn" onclick="openTab('found')">Found</button>
-  <button class="tab-btn" onclick="openTab('settings')">Settings</button>
+<div class="content">
+
+<div class="len-buttons">
+<button class="active" onclick="setLen(3,5,this)">3–5</button>
+<button onclick="setLen(4,6,this)">4–6</button>
+<button onclick="setLen(5,7,this)">5–7</button>
 </div>
 
-<div id="scanner" class="tab-content active">
-  <div class="len-info">Username length: <span id="lenVal">7</span></div>
-  <input type="range" id="lengthSlider" min="3" max="20" value="7">
+<input id="pattern" placeholder="Pattern (ab??, x?x?, etc)">
+<input id="webhook" placeholder="Paste your Discord webhook">
 
-  <div class="len-info">Scan speed: <span id="speedVal">1500</span> ms</div>
-  <input type="range" id="speedSlider" min="500" max="5000" step="100" value="1500">
+<button id="startBtn" class="main-btn" onclick="toggle()">Start Scanning</button>
 
-  <input id="pattern" placeholder="Pattern (ab??, x?x?, 69?? etc)" type="text">
-  <input id="webhook" placeholder="Paste your Discord webhook (optional)" type="text">
-
-  <button id="startBtn" class="main-btn" onclick="toggle()">Start Scanning</button>
-
-  <div class="status">
-    <div id="status">Idle</div>
-    <div id="stats">Scanned: 0 • Found: 0</div>
-  </div>
+<div class="status">
+<div id="status">Idle</div>
+<div id="stats">Scanned: 0 • Found: 0</div>
 </div>
 
-<div id="found" class="tab-content">
-  <div id="foundList"></div>
-  <p style="text-align:center; color:var(--dim); margin-top:20px;" id="noFound">No names found yet...</p>
-</div>
+<div id="foundList"></div>
 
-<div id="settings" class="tab-content">
-  <p style="text-align:center; color:var(--dim);">Coming soon: proxy options, auto-copy, more filters...</p>
 </div>
 
 <div class="footer">
-made by Aceii_ • discord.gg/kAAhfyKdvC
+made by Aceii_. On discord • https://discord.gg/kAAhfyKdvC
 </div>
 
 </div>
 
 <script>
-let running = false;
-let scanned = 0;
-let foundCount = 0;
+let min=3,max=5,running=false,scanned=0,found=0
+const chars="abcdefghijklmnopqrstuvwxyz0123456789"
+const statusEl=document.getElementById("status")
+const statsEl=document.getElementById("stats")
+const foundList=document.getElementById("foundList")
+const proxy="https://auth.roproxy.com"
+const birthday="2000-01-01"
 
-const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-const statusEl = document.getElementById("status");
-const statsEl = document.getElementById("stats");
-const foundList = document.getElementById("foundList");
-const noFoundEl = document.getElementById("noFound");
-const proxy = "https://auth.roproxy.com";
-const birthday = "2000-01-01";
-
-const lengthSlider = document.getElementById("lengthSlider");
-const speedSlider = document.getElementById("speedSlider");
-const lenVal = document.getElementById("lenVal");
-const speedVal = document.getElementById("speedVal");
-
-lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
-speedSlider.oninput  = () => speedVal.textContent  = speedSlider.value;
-
-function rand() {
-  return chars[Math.floor(Math.random() * chars.length)];
+function setLen(a,b,el){
+min=a;max=b
+document.querySelectorAll(".len-buttons button").forEach(x=>x.classList.remove("active"))
+el.classList.add("active")
 }
 
-function gen() {
-  const pattern = document.getElementById("pattern").value.toLowerCase().trim();
-  if (pattern) {
-    return [...pattern].map(c => c === "?" ? rand() : c).join("");
-  }
-  const len = parseInt(lengthSlider.value);
-  return Array.from({length: len}, rand).join("");
+function rand(){return chars[Math.floor(Math.random()*chars.length)]}
+
+function gen(){
+let p=document.getElementById("pattern").value.toLowerCase().trim()
+if(p){
+return [...p].map(c=>c=="?"?rand():c).join("")
+}
+let l=Math.floor(Math.random()*(max-min+1))+min
+return Array.from({length:l},rand).join("")
 }
 
-async function check(name) {
-  try {
-    const res = await fetch(`${proxy}/v1/usernames/validate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: name,
-        birthday: birthday
-      })
-    });
-    if (!res.ok) return false;
-    const json = await res.json();
-    return json.code === 0;
-  } catch {
-    return false;
-  }
+async function check(name){
+try{
+let r=await fetch(`${proxy}/v1/usernames/validate?username=${name}&birthday=${birthday}`)
+let j=await r.json()
+return j.code===0
+}catch{return false}
 }
 
-function sendWebhook(name) {
-  const url = document.getElementById("webhook").value.trim();
-  if (!url) return;
-  fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: `⚡ **Available Roblox Name:** \`${name}\` (len ${name.length})\nJoin: https://discord.gg/kAAhfyKdvC`
-    })
-  }).catch(() => {});
+function sendWebhook(name){
+let url=document.getElementById("webhook").value.trim()
+if(!url) return
+fetch(url,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+content:`✅ **Available Roblox Username:** \`${name}\`
+🚀 Join our server: https://discord.gg/kAAhfyKdvC`
+})
+})
 }
 
-function addFound(n) {
-  noFoundEl.style.display = "none";
-  const d = document.createElement("div");
-  d.className = "found-item";
-  d.innerHTML = `<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`;
-  foundList.prepend(d);
+function addFound(n){
+let d=document.createElement("div")
+d.className="found-item"
+d.innerHTML=`<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`
+foundList.prepend(d)
 }
 
-async function toggle() {
-  running = !running;
-  const btn = document.getElementById("startBtn");
-  btn.textContent = running ? "Stop Scanning" : "Start Scanning";
-  btn.classList.toggle("stop", running);
-  btn.classList.toggle("running", running);
+async function toggle(){
+running=!running
+const btn=document.getElementById("startBtn")
+btn.textContent=running?"Stop Scanning":"Start Scanning"
+btn.classList.toggle("stop",running)
 
-  while (running) {
-    const name = gen();
-    scanned++;
-    statusEl.innerHTML = `<span class="spinner"></span>${name}`;
-
-    const ok = await check(name);
-
-    if (ok) {
-      foundCount++;
-      statusEl.textContent = `AVAILABLE → ${name}`;
-      statusEl.classList.add("available");
-      addFound(name);
-      sendWebhook(name);
-    } else {
-      statusEl.textContent = `Taken / Invalid`;
-      statusEl.classList.remove("available");
-    }
-
-    statsEl.textContent = `Scanned: ${scanned} • Found: ${foundCount}`;
-
-    await new Promise(r => setTimeout(r, parseInt(speedSlider.value)));
-  }
+while(running){
+let name=gen()
+scanned++
+statusEl.innerHTML=`<span class="spinner"></span>${name}`
+let ok=await check(name)
+if(ok){
+found++
+statusEl.textContent=`AVAILABLE → ${name}`
+statusEl.classList.add("available")
+addFound(name)
+sendWebhook(name)
+}else{
+statusEl.textContent=`Taken / Invalid`
+statusEl.classList.remove("available")
 }
-
-function openTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
+statsEl.textContent=`Scanned: ${scanned} • Found: ${found}`
+await new Promise(r=>setTimeout(r,1200))
+}
 }
 </script>
 
