@@ -148,9 +148,6 @@ foundList.prepend(d)
 if(foundList.children.length>6) foundList.removeChild(foundList.lastChild)
 }
 
-// ─── SOUND ALERT ─────────────────────────────
-const beep=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3")
-
 async function toggle(){
 running=!running
 const btn=document.getElementById("startBtn")
@@ -168,7 +165,6 @@ statusEl.textContent=`AVAILABLE → ${name}`
 statusEl.classList.add("available")
 addFound(name)
 sendWebhook(name)
-beep.play().catch(()=>{})
 }else{
 statusEl.textContent=`Taken / Invalid`
 statusEl.classList.remove("available")
