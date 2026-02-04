@@ -49,7 +49,6 @@
       padding: 20px 24px 16px;
       text-align: center;
       background: linear-gradient(to bottom, rgba(124,58,237,0.12), transparent);
-      position: relative;
     }
 
     h1 {
@@ -220,21 +219,34 @@
       100% { background-position: 200% }
     }
 
-    .found-item {
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.35);
-      padding: 16px 20px;
+    .found-item, .thread-item {
+      padding: 14px 18px;
       border-radius: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+      animation: popIn 0.5s ease-out;
+    }
+
+    .found-item {
+      background: rgba(34,197,94,0.18);
+      border: 1px solid rgba(34,197,94,0.45);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .thread-item {
+      background: rgba(30,30,50,0.6);
+      border-left: 4px solid #64748b;
+    }
+
+    .thread-item.found {
+      background: rgba(34,197,94,0.12);
+      border-left-color: #22c55e;
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.7) translateY(30px); opacity: 0; }
-      70% { transform: scale(1.08) translateY(-6px); }
+      0% { transform: scale(0.92) translateY(20px); opacity: 0; }
       100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
@@ -246,19 +258,22 @@
       -webkit-text-fill-color: transparent;
     }
 
-    #foundContainer {
-      max-height: 420px;
+    #foundContainer, #threadContainer {
+      max-height: 380px;
       overflow-y: auto;
-      padding-right: 8px;
+      padding-right: 6px;
+      margin-top: 16px;
     }
 
-    #foundContainer::-webkit-scrollbar {
-      width: 7px;
+    #foundContainer::-webkit-scrollbar,
+    #threadContainer::-webkit-scrollbar {
+      width: 6px;
     }
 
-    #foundContainer::-webkit-scrollbar-thumb {
+    #foundContainer::-webkit-scrollbar-thumb,
+    #threadContainer::-webkit-scrollbar-thumb {
       background: linear-gradient(var(--accent), var(--accent-glow));
-      border-radius: 4px;
+      border-radius: 3px;
     }
 
     .footer {
@@ -277,7 +292,6 @@
     }
 
     @media (max-width: 500px) {
-      header { padding: 16px 20px 12px; }
       h1 { font-size: 1.8rem; }
       .content { padding: 20px; }
       #startBtn { font-size: 1.1rem; padding: 16px; }
@@ -296,8 +310,7 @@
 
   <div class="segmented">
     <button class="segment-btn active" data-panel="main">Snipe</button>
-    <button class="segment-btn" data-panel="lookup">Lookup</button>
-    <button class="segment-btn" data-panel="tools">Tools</button>
+    <button class="segment-btn" data-panel="thread">Thread</button>
   </div>
 
   <div class="content" id="mainPanel">
@@ -325,9 +338,9 @@
 
     <button id="startBtn">START SNIPING</button>
 
-    <div id="status">Ready to hunt • 06:31 AM EST</div>
+    <div id="status">Ready to hunt</div>
 
-    <div style="margin:24px 0; font-size:0.95rem; color:var(--dim); text-align:center;">
+    <div style="margin:20px 0; font-size:0.95rem; color:var(--dim); text-align:center;">
       <div>Scanned: <span id="scanned">0</span></div>
       <div>Found: <span id="foundCount">0</span></div>
       <div id="speedometer">0.0 / sec</div>
@@ -336,42 +349,23 @@
     <div id="foundContainer"></div>
   </div>
 
-  <div class="content" id="lookupPanel" style="display:none">
-    <div class="group">
-      <label>Username</label>
-      <input type="text" id="lookupName" placeholder="Enter username">
-    </div>
-    <button style="width:100%; background:#3b82f6; color:white; padding:16px; border:none; border-radius:16px; font-weight:600; cursor:pointer;">
-      Lookup User ID
-    </button>
-    <div id="lookupResult" style="margin-top:20px; min-height:80px; color:var(--dim);"></div>
-  </div>
-
-  <div class="content" id="toolsPanel" style="display:none">
-    <div style="text-align:center; padding:60px 0; color:var(--dim); font-size:1.1rem;">
-      More features coming soon...<br><br>
-      • Wordlist upload<br>
-      • Discord webhook<br>
-      • Auto-copy toggle<br>
-      • Sound on hit<br>
-      • Export hits
-    </div>
+  <div class="content" id="threadPanel" style="display:none">
+    <div id="threadContainer"></div>
   </div>
 
   <div class="footer">
-    Columbus, Ohio • February 04, 2026 • 06:31 AM EST
+    Columbus, Ohio • February 04, 2026 • 06:37 AM EST
   </div>
 </div>
 
 <script>
 // ──────────────────────────────────────────────
-//  Control logic
+//  Updated logic – instant found, fading confetti, full thread
 // ──────────────────────────────────────────────
 
 const panels = {
   main: document.getElementById('mainPanel'),
-  lookup: document.getElementById('lookupPanel'),
-  tools: document.getElementById('toolsPanel')
+  thread: document.getElementById('threadPanel')
 };
 
 document.querySelectorAll('.segment-btn').forEach(btn => {
@@ -424,16 +418,35 @@ function randChar() {
 
 function generateName() {
   let pat = patternInput.value.trim();
-  if (!pat) {
-    return Array(+lengthSlider.value).fill().map(randChar).join('');
-  }
+  if (!pat) return Array(+lengthSlider.value).fill().map(randChar).join('');
   return pat.replace(/\?/g, randChar);
+}
+
+function addToThread(name, isAvailable) {
+  const container = document.getElementById('threadContainer');
+  const item = document.createElement('div');
+  item.className = 'thread-item' + (isAvailable ? ' found' : '');
+  item.innerHTML = `
+    <span style="font-weight:${isAvailable ? '700' : '400'};">
+      ${isAvailable ? '✓ ' : '✗ '} ${name}
+    </span>
+    <span style="font-size:0.85rem; color:var(--dim);">
+      ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})}
+    </span>
+  `;
+  container.prepend(item);
+
+  // keep only last 80 entries
+  if (container.children.length > 80) {
+    container.removeChild(container.lastChild);
+  }
 }
 
 function addFound(name) {
   found++;
   foundEl.textContent = found;
 
+  const container = document.getElementById('foundContainer');
   const item = document.createElement('div');
   item.className = 'found-item';
   item.innerHTML = `
@@ -449,15 +462,10 @@ function addFound(name) {
       </a>
     </div>
   `;
-  document.getElementById('foundContainer').prepend(item);
+  container.prepend(item);
 
-  // trigger confetti
-  confetti({
-    particleCount: 80,
-    spread: 80,
-    origin: { y: 0.6 },
-    colors: ['#22c55e', '#4ade80', '#86efac', '#a78bfa']
-  });
+  // instant confetti with fade-out
+  confettiBurst();
 }
 
 async function check(name) {
@@ -495,6 +503,7 @@ startBtn.onclick = async () => {
   scanned = found = 0;
   scannedEl.textContent = foundEl.textContent = '0';
   document.getElementById('foundContainer').innerHTML = '';
+  document.getElementById('threadContainer').innerHTML = '';
 
   while (running) {
     const name = generateName();
@@ -505,6 +514,9 @@ startBtn.onclick = async () => {
     statusEl.textContent = `Checking ${name} …`;
 
     const available = await check(name);
+
+    // INSTANT thread update + found list if available
+    addToThread(name, available);
 
     if (available) {
       statusEl.classList.add('hit');
@@ -519,52 +531,58 @@ startBtn.onclick = async () => {
   }
 };
 
-// minimal confetti function
-function confetti(opts) {
+// ──────────────────────────────────────────────
+//  Improved confetti – particles fade out
+// ──────────────────────────────────────────────
+
+function confettiBurst() {
   const c = document.getElementById('confetti');
   const ctx = c.getContext('2d');
   c.width = window.innerWidth;
   c.height = window.innerHeight;
 
   let particles = [];
-  for (let i = 0; i < opts.particleCount; i++) {
+  for (let i = 0; i < 100; i++) {
     particles.push({
       x: Math.random() * c.width,
-      y: Math.random() * c.height * 0.4,
+      y: Math.random() * c.height * 0.5,
       r: Math.random() * 5 + 3,
-      color: opts.colors[Math.floor(Math.random() * opts.colors.length)],
-      vx: (Math.random() - 0.5) * opts.spread / 10,
-      vy: Math.random() * 4 + 2,
-      rot: Math.random() * 360,
-      vr: (Math.random() - 0.5) * 10
+      color: ['#22c55e', '#4ade80', '#86efac', '#a78bfa', '#c084fc'][Math.floor(Math.random()*5)],
+      vx: (Math.random() - 0.5) * 12,
+      vy: (Math.random() - 0.5) * 10 - 5,
+      life: 1,           // opacity / lifetime
+      decay: 0.015 + Math.random() * 0.01
     });
   }
 
-  function draw() {
+  function animate() {
     ctx.clearRect(0, 0, c.width, c.height);
+
+    particles = particles.filter(p => p.life > 0);
+
     particles.forEach(p => {
       ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.globalAlpha = p.life;
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
 
       p.x += p.vx;
       p.y += p.vy;
-      p.rot += p.vr;
       p.vy += 0.18; // gravity
-      if (p.y > c.height) p.y = -20;
+      p.life -= p.decay;
     });
 
-    if (particles.some(p => p.y < c.height + 50)) {
-      requestAnimationFrame(draw);
+    if (particles.length > 0) {
+      requestAnimationFrame(animate);
     } else {
       ctx.clearRect(0, 0, c.width, c.height);
     }
   }
 
-  draw();
+  animate();
 }
 
 window.addEventListener('resize', () => {
