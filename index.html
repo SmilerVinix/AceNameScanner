@@ -247,7 +247,7 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* ────────────── TERMINAL THREAD STYLE ────────────── */
+    /* TERMINAL THREAD */
     #threadContainer {
       background: var(--terminal-bg);
       border: 1px solid #003300;
@@ -335,13 +335,6 @@
       pointer-events: none;
       z-index: 9999;
     }
-
-    @media (max-width: 500px) {
-      h1 { font-size: 1.8rem; }
-      .content { padding: 20px; }
-      #startBtn { font-size: 1.1rem; padding: 16px; }
-      #threadContainer { font-size: 0.92rem; }
-    }
   </style>
 </head>
 <body>
@@ -382,6 +375,8 @@
       <button class="preset-btn" onclick="setPreset('rare')">Rare style</button>
     </div>
 
+    <input type="text" id="webhookUrl" placeholder="Discord webhook URL (required for stop → file)" style="margin:16px 0;">
+
     <button id="startBtn">START SNIPING</button>
 
     <div id="status">Ready to hunt</div>
@@ -398,19 +393,19 @@
   <div class="content" id="threadPanel" style="display:none; padding:0;">
     <div id="threadContainer">
       <div class="scanline"></div>
-      <div class="thread-line" style="color:#006600;">[SYSTEM] Terminal initialized — 2026-02-04 06:39 EST</div>
+      <div class="thread-line" style="color:#006600;">[SYSTEM] Terminal initialized — 2026-02-04 06:47 EST</div>
       <div class="thread-line" style="color:#006600;">[INFO] Waiting for sniper activation...</div>
     </div>
   </div>
 
   <div class="footer">
-    Columbus, Ohio • February 04, 2026 • 06:39 AM EST
+    Columbus, Ohio • February 04, 2026 • 06:47 AM EST
   </div>
 </div>
 
 <script>
 // ──────────────────────────────────────────────
-//  Logic with terminal-style thread
+//  Logic – sends .lua file on STOP
 // ──────────────────────────────────────────────
 
 const panels = {
@@ -432,6 +427,7 @@ const delaySlider    = document.getElementById('delay');
 const lenVal         = document.getElementById('lenVal');
 const delayVal       = document.getElementById('delayVal');
 const patternInput   = document.getElementById('pattern');
+const webhookInput   = document.getElementById('webhookUrl');
 const startBtn       = document.getElementById('startBtn');
 const statusEl       = document.getElementById('status');
 const scannedEl      = document.getElementById('scanned');
@@ -443,6 +439,7 @@ const threadCont     = document.getElementById('threadContainer');
 let running = false;
 let scanned = 0;
 let found   = 0;
+let foundNames = []; // ← we collect only available ones here
 let lastTime = performance.now();
 let checksThisSec = 0;
 
@@ -482,7 +479,6 @@ function logToThread(text, isFound = false) {
   `;
   threadCont.insertBefore(line, threadCont.firstChild);
 
-  // keep ~120 lines max
   if (threadCont.children.length > 120) {
     threadCont.removeChild(threadCont.lastChild);
   }
@@ -492,6 +488,7 @@ function logToThread(text, isFound = false) {
 
 function addFound(name) {
   found++;
+  foundNames.push(name); // collect for lua file
   foundEl.textContent = found;
 
   const container = document.getElementById('foundContainer');
@@ -512,7 +509,6 @@ function addFound(name) {
   `;
   container.prepend(item);
 
-  // trigger confetti
   confettiBurst();
 }
 
@@ -536,6 +532,58 @@ function updateSpeed() {
   }
 }
 
+async function sendAvailableAsLuaFile() {
+  const webhook = webhookInput.value.trim();
+  if (!webhook) {
+    alert("No webhook URL set → file not sent");
+    return;
+  }
+
+  if (foundNames.length === 0) {
+    // send simple message if nothing found
+    fetch(webhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: "No available usernames found during this session."
+      })
+    }).catch(() => {});
+    return;
+  }
+
+  // build Lua content
+  const dateStr = new Date().toISOString().slice(0,10) + "_" + new Date().toLocaleTimeString().replace(/:/g,'');
+  const filename = `available_usernames_${dateStr}.lua`;
+
+  const luaContent = `-- Available Roblox usernames found\n` +
+                     `-- Date: ${new Date().toLocaleString()}\n` +
+                     `-- You can choose any of these:\n\n` +
+                     `local available = {\n` +
+                     foundNames.map(n => `    "${n}",`).join('\n') + `\n}\n\n` +
+                     `-- Example usage:\n` +
+                     `-- print(available[1])   -- first one\n` +
+                     `-- or just copy-paste one name`;
+
+  const blob = new Blob([luaContent], { type: "text/plain" });
+  const file = new File([blob], filename, { type: "text/plain" });
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("payload_json", JSON.stringify({
+    content: `Found **${foundNames.length}** available username(s) during session.\nAttached: \`${filename}\``
+  }));
+
+  try {
+    await fetch(webhook, {
+      method: "POST",
+      body: formData
+    });
+    logToThread("[WEBHOOK] Successfully sent available usernames as .lua file");
+  } catch (err) {
+    logToThread(`[ERROR] Failed to send webhook: ${err.message}`);
+  }
+}
+
 startBtn.onclick = async () => {
   running = !running;
   startBtn.textContent = running ? 'STOP' : 'START SNIPING';
@@ -544,8 +592,11 @@ startBtn.onclick = async () => {
 
   if (running) {
     logToThread("<span style='color:#00aa2a'>[SYSTEM] Sniper thread activated</span>");
+    foundNames = []; // reset list when starting new session
   } else {
     logToThread("<span style='color:#ff5555'>[SYSTEM] Sniper thread terminated</span>");
+    logToThread(`[SUMMARY] Found ${foundNames.length} available username(s)`);
+    await sendAvailableAsLuaFile();
   }
 
   if (!running) {
@@ -568,7 +619,6 @@ startBtn.onclick = async () => {
 
     const available = await check(name);
 
-    // Log EVERY check instantly to terminal
     logToThread(`${available ? '✓' : '✗'} ${name}`, available);
 
     if (available) {
@@ -584,10 +634,7 @@ startBtn.onclick = async () => {
   }
 };
 
-// ──────────────────────────────────────────────
-//  Confetti with proper fade-out
-// ──────────────────────────────────────────────
-
+// confetti (unchanged from previous)
 function confettiBurst() {
   const c = document.getElementById('confetti');
   const ctx = c.getContext('2d');
@@ -610,7 +657,6 @@ function confettiBurst() {
 
   function animate() {
     ctx.clearRect(0, 0, c.width, c.height);
-
     particles = particles.filter(p => p.life > 0.01);
 
     particles.forEach(p => {
