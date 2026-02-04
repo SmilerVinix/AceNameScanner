@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ace’s RBLX Name Sniper</title>
+<title>Ace’s UserScanner</title>
 
 <style>
 :root {
@@ -12,11 +12,9 @@
   --text: #e2e8f0;
   --dim: #94a3b8;
   --accent: #22c55e;
-  --accent-glow: rgba(34, 197, 94, 0.18);
   --danger: #ef4444;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --shadow: 0 10px 30px -12px rgba(0,0,0,0.7);
+  --border: rgba(255,255,255,.08);
+  --glow: rgba(34, 197, 94, 0.25);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,263 +24,254 @@ body {
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
-  padding: 20px 14px;
+  padding: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: pageFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .container {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow);
+  border-radius: 14px;
+  border: 1px solid var(--border);
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  position: relative;
-}
-
-.container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 1px;
-  background: linear-gradient(145deg, rgba(34,197,94,0.12), transparent 40%, rgba(34,197,94,0.08));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 .header {
   text-align: center;
-  padding: 22px 18px;
+  padding: 18px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(to bottom, rgba(34,197,94,0.06), transparent);
+  background: linear-gradient(to bottom, rgba(34,197,94,0.08), transparent);
 }
 
 h1 {
-  font-size: 1.7rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #a1e65c, #4ade80, #22c55e);
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, #a1e65c, #4ade80);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.5px;
 }
 
-.content { padding: 24px 20px; }
+.content { padding: 18px; }
 
-label {
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  display: block;
+.len-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #1e1e2e;
   color: var(--dim);
-  font-weight: 500;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }
 
-input[type="text"],
-input[type="range"] {
+button:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  background: #25253a;
+}
+
+button.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 4px 14px var(--glow);
+}
+
+button.stop {
+  background: var(--danger);
+  color: white;
+}
+
+.main-btn {
   width: 100%;
-  padding: 13px 14px;
-  margin-bottom: 16px;
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+  background: linear-gradient(90deg, #164d32, #1e3a2f);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.main-btn.running {
+  animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 12px var(--glow); }
+  to   { box-shadow: 0 0 28px var(--glow); }
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
   background: #16161f;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   color: white;
   font-size: 1rem;
   transition: all 0.2s;
 }
 
-input[type="text"]:focus,
-input[type="range"]:focus {
+input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
+  box-shadow: 0 0 0 3px var(--glow);
 }
-
-input[type="range"] { accent-color: var(--accent); }
-
-button {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #1e3a2f, #164d32);
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all 0.22s;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(34,197,94,0.12);
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(34,197,94,0.2);
-}
-
-button.stop {
-  background: linear-gradient(90deg, #4b1c1c, #7f1d1d);
-  color: white;
-  box-shadow: 0 4px 12px rgba(239,68,68,0.2);
-}
-
-button.stop:hover { box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
 
 .status {
-  background: #16161f;
-  padding: 16px;
-  border-radius: 12px;
+  background: #1e1e2e;
+  padding: 14px;
+  border-radius: 10px;
   text-align: center;
-  margin: 16px 0;
+  margin-bottom: 14px;
   border: 1px solid var(--border);
-  min-height: 68px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  transition: all 0.3s ease;
 }
 
 #status.available {
   color: var(--accent);
   font-weight: 600;
-  font-size: 1.15rem;
+  animation: availablePop 0.4s ease-out;
 }
 
-#stats { color: var(--dim); font-size: 0.9rem; }
+@keyframes availablePop {
+  0%   { transform: scale(0.92); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
 .found-item {
   background: #16161f;
-  padding: 12px 14px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   border: 1px solid var(--border);
-  transition: all 0.18s;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: slideUp 0.4s forwards;
 }
 
-.found-item:hover {
-  border-color: var(--accent);
-  background: #1a1f1a;
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .found-item button {
-  width: auto;
   padding: 8px 14px;
   font-size: 0.9rem;
   background: var(--accent);
   color: black;
-  box-shadow: none;
-}
-
-.found-item button:hover {
-  background: #16a34a;
-  color: white;
 }
 
 .spinner {
   display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 3px solid rgba(255,255,255,0.15);
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255,255,255,.2);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   vertical-align: middle;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 @keyframes spin { to { transform: rotate(360deg) } }
 
 .footer {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: .75rem;
   color: var(--dim);
-  padding: 16px;
+  padding: 14px;
   border-top: 1px solid var(--border);
-  background: rgba(0,0,0,0.15);
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
-  <div class="header">
-    <h1>Ace’s RBLX Name Sniper</h1>
-  </div>
 
-  <div class="content">
-    <label>Username length: <span id="lenVal">5</span></label>
-    <input type="range" id="lengthSlider" min="3" max="20" value="5">
+<div class="header">
+<h1>Ace’s UserScanner</h1>
+</div>
 
-    <label>Scan speed (ms delay): <span id="speedVal">2000</span></label>
-    <input type="range" id="speedSlider" min="500" max="6000" step="100" value="2000">
+<div class="content">
 
-    <input id="pattern" placeholder="Pattern (ab??, x?x?, 420??)" type="text">
-    <input id="webhook" placeholder="Discord webhook URL (optional)" type="text">
+<div class="len-buttons">
+<button class="active" onclick="setLen(3,5,this)">3–5</button>
+<button onclick="setLen(4,6,this)">4–6</button>
+<button onclick="setLen(5,7,this)">5–7</button>
+</div>
 
-    <button id="startBtn">Start Scanning</button>
+<input id="pattern" placeholder="Pattern (ab??, x?x?, 69?? etc)">
+<input id="webhook" placeholder="Paste your Discord webhook (optional)">
 
-    <div class="status">
-      <div id="status">Idle</div>
-      <div id="stats">Scanned: 0 • Found: 0</div>
-    </div>
+<button id="startBtn" class="main-btn" onclick="toggle()">Start Scanning</button>
 
-    <div id="foundList"></div>
-  </div>
+<div class="status">
+<div id="status">Idle</div>
+<div id="stats">Scanned: 0 • Found: 0</div>
+</div>
 
-  <div class="footer">
-    made with ❤️ by Aceii_ • discord.gg/kAAhfyKdvC
-  </div>
+<div id="foundList"></div>
+
+</div>
+
+<div class="footer">
+made by Aceii_ • discord.gg/kAAhfyKdvC
+</div>
+
 </div>
 
 <script>
+let min = 3, max = 5;
+let running = false;
 let scanned = 0;
 let found = 0;
-let running = false;
 
 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 const statusEl = document.getElementById("status");
 const statsEl = document.getElementById("stats");
 const foundList = document.getElementById("foundList");
-
 const proxy = "https://auth.roproxy.com";
 const birthday = "2000-01-01";
 
-const lengthSlider = document.getElementById("lengthSlider");
-const speedSlider = document.getElementById("speedSlider");
-const lenVal   = document.getElementById("lenVal");
-const speedVal  = document.getElementById("speedVal");
-
-lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
-speedSlider.oninput  = () => speedVal.textContent  = speedSlider.value;
+function setLen(a, b, el) {
+  min = a; max = b;
+  document.querySelectorAll(".len-buttons button").forEach(x => x.classList.remove("active"));
+  el.classList.add("active");
+}
 
 function rand() {
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
 function gen() {
-  const len = parseInt(lengthSlider.value);
-  const pattern = document.getElementById("pattern").value.trim().toLowerCase();
-  if (pattern) {
-    return [...pattern].map(c => c === "?" ? rand() : c).join("");
+  const p = document.getElementById("pattern").value.toLowerCase().trim();
+  if (p) {
+    return [...p].map(c => c === "?" ? rand() : c).join("");
   }
-  return Array(len).fill().map(rand).join("");
-}
-
-function addFound(name) {
-  const div = document.createElement("div");
-  div.className = "found-item";
-  div.innerHTML = `<span>${name}</span><button onclick="navigator.clipboard.writeText('${name}')">Copy</button>`;
-  foundList.prepend(div);
-  if (foundList.children.length > 7) foundList.removeChild(foundList.lastChild);
+  const l = Math.floor(Math.random() * (max - min + 1)) + min;
+  return Array.from({length: l}, rand).join("");
 }
 
 async function check(name) {
@@ -290,19 +279,17 @@ async function check(name) {
     const res = await fetch(`${proxy}/v1/usernames/validate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: name, birthday })
+      body: JSON.stringify({
+        username: name,
+        birthday: birthday
+      })
     });
 
-    if (!res.ok) {
-      console.log(`HTTP ${res.status} for ${name}`);
-      return false;
-    }
+    if (!res.ok) return false;
 
     const json = await res.json();
-    console.log(`${name} → code: ${json.code} | msg: ${json.message || "(no message)"}`);
     return json.code === 0;
-  } catch (err) {
-    console.error("Fetch error:", name, err);
+  } catch {
     return false;
   }
 }
@@ -315,9 +302,16 @@ function sendWebhook(name) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      content: `🎯 **Available Roblox Username Found!**\n\`${name}\` (length ${name.length})\nhttps://discord.gg/kAAhfyKdvC`
+      content: `✅ **Available Roblox Username:** \`${name}\`\nLength: ${name.length}\n🚀 Join: https://discord.gg/kAAhfyKdvC`
     })
-  }).catch(e => console.log("Webhook failed:", e));
+  }).catch(() => {});
+}
+
+function addFound(n) {
+  const d = document.createElement("div");
+  d.className = "found-item";
+  d.innerHTML = `<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`;
+  foundList.prepend(d);
 }
 
 async function toggle() {
@@ -325,15 +319,16 @@ async function toggle() {
   const btn = document.getElementById("startBtn");
   btn.textContent = running ? "Stop Scanning" : "Start Scanning";
   btn.classList.toggle("stop", running);
+  btn.classList.toggle("running", running);
 
   while (running) {
     const name = gen();
     scanned++;
-    statusEl.innerHTML = `<span class="spinner"></span>Checking ${name}...`;
+    statusEl.innerHTML = `<span class="spinner"></span>${name}`;
 
-    const isAvailable = await check(name);
+    const ok = await check(name);
 
-    if (isAvailable) {
+    if (ok) {
       found++;
       statusEl.textContent = `AVAILABLE → ${name}`;
       statusEl.classList.add("available");
@@ -346,11 +341,10 @@ async function toggle() {
 
     statsEl.textContent = `Scanned: ${scanned} • Found: ${found}`;
 
-    await new Promise(r => setTimeout(r, parseInt(speedSlider.value) || 2000));
+    await new Promise(r => setTimeout(r, 1200));
   }
 }
-
-document.getElementById("startBtn").onclick = toggle;
 </script>
+
 </body>
 </html>
