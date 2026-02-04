@@ -19,11 +19,7 @@
   --shadow: 0 10px 30px -12px rgba(0,0,0,0.7);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
@@ -55,9 +51,7 @@ body {
   border-radius: 20px;
   padding: 1px;
   background: linear-gradient(145deg, rgba(34,197,94,0.12), transparent 40%, rgba(34,197,94,0.08));
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -80,9 +74,7 @@ h1 {
   letter-spacing: -0.5px;
 }
 
-.content {
-  padding: 24px 20px;
-}
+.content { padding: 24px 20px; }
 
 label {
   font-size: 0.9rem;
@@ -112,9 +104,7 @@ input[type="range"]:focus {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-input[type="range"] {
-  accent-color: var(--accent);
-}
+input[type="range"] { accent-color: var(--accent); }
 
 button {
   width: 100%;
@@ -142,9 +132,7 @@ button.stop {
   box-shadow: 0 4px 12px rgba(239,68,68,0.2);
 }
 
-button.stop:hover {
-  box-shadow: 0 8px 20px rgba(239,68,68,0.3);
-}
+button.stop:hover { box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
 
 .status {
   background: #16161f;
@@ -166,10 +154,7 @@ button.stop:hover {
   font-size: 1.15rem;
 }
 
-#stats {
-  color: var(--dim);
-  font-size: 0.9rem;
-}
+#stats { color: var(--dim); font-size: 0.9rem; }
 
 .found-item {
   background: #16161f;
@@ -226,8 +211,8 @@ button.stop:hover {
 }
 </style>
 </head>
-
 <body>
+
 <div class="container">
   <div class="header">
     <h1>Ace’s RBLX Name Sniper</h1>
@@ -241,9 +226,9 @@ button.stop:hover {
     <input type="range" id="speedSlider" min="200" max="3000" step="50" value="1200">
 
     <input id="pattern" placeholder="Pattern (ab??, x?x?)" type="text">
-    <input id="webhook" placeholder="Paste your Discord webhook" type="text">
+    <input id="webhook" placeholder="Paste your Discord webhook (optional)" type="text">
 
-    <button id="startBtn" onclick="toggle()">Start Scanning</button>
+    <button id="startBtn">Start Scanning</button>
 
     <div class="status">
       <div id="status">Idle</div>
@@ -259,84 +244,112 @@ button.stop:hover {
 </div>
 
 <script>
-// Your original JavaScript remains unchanged — just paste it here
-let scanned=0,found=0,running=false
-let chars="abcdefghijklmnopqrstuvwxyz0123456789"
-let statusEl=document.getElementById("status")
-let statsEl=document.getElementById("stats")
-let foundList=document.getElementById("foundList")
-let proxy="https://auth.roproxy.com"
-let birthday="2000-01-01"
+let scanned = 0;
+let found = 0;
+let running = false;
 
-let lengthSlider=document.getElementById("lengthSlider")
-let speedSlider=document.getElementById("speedSlider")
-let lenVal=document.getElementById("lenVal")
-let speedVal=document.getElementById("speedVal")
+const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+const statusEl = document.getElementById("status");
+const statsEl = document.getElementById("stats");
+const foundList = document.getElementById("foundList");
+const proxy = "https://auth.roproxy.com";
+const birthday = "2000-01-01";
 
-lengthSlider.oninput=function(){lenVal.textContent=this.value}
-speedSlider.oninput=function(){speedVal.textContent=this.value}
+const lengthSlider = document.getElementById("lengthSlider");
+const speedSlider = document.getElementById("speedSlider");
+const lenVal = document.getElementById("lenVal");
+const speedVal = document.getElementById("speedVal");
 
-function rand(){return chars[Math.floor(Math.random()*chars.length)]}
-function gen(){
-  let len=parseInt(lengthSlider.value)
-  let p=document.getElementById("pattern").value.toLowerCase().trim()
-  if(p) return [...p].map(c=>c=="?"?rand():c).join("")
-  return Array.from({length:len},rand).join("")
+lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
+speedSlider.oninput = () => speedVal.textContent = speedSlider.value;
+
+function rand() {
+  return chars[Math.floor(Math.random() * chars.length)];
 }
 
-function addFound(n){
-  let d=document.createElement("div")
-  d.className="found-item"
-  d.innerHTML=`<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`
-  foundList.prepend(d)
-  if(foundList.children.length>6) foundList.removeChild(foundList.lastChild)
+function gen() {
+  const len = parseInt(lengthSlider.value);
+  const p = document.getElementById("pattern").value.toLowerCase().trim();
+  if (p) {
+    return [...p].map(c => c === "?" ? rand() : c).join("");
+  }
+  return Array.from({length: len}, rand).join("");
 }
 
-async function check(name){
-  try{
-    let r=await fetch(`${proxy}/v1/usernames/validate?username=${name}&birthday=${birthday}`)
-    let j=await r.json()
-    return j.code===0
-  }catch{return false}
+function addFound(name) {
+  const d = document.createElement("div");
+  d.className = "found-item";
+  d.innerHTML = `<span>${name}</span><button onclick="navigator.clipboard.writeText('${name}')">Copy</button>`;
+  foundList.prepend(d);
+  if (foundList.children.length > 6) foundList.removeChild(foundList.lastChild);
 }
 
-function sendWebhook(name){
-  let url=document.getElementById("webhook").value.trim()
-  if(!url) return
-  fetch(url,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      content:`✅ **Available Roblox Username:** \`${name}\`
-    })
-  })
-}
+async function check(name) {
+  try {
+    const response = await fetch(`${proxy}/v1/usernames/validate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: name,
+        birthday: birthday
+      })
+    });
 
-async function toggle(){
-  running=!running
-  let btn=document.getElementById("startBtn")
-  btn.textContent=running?"Stop Scanning":"Start Scanning"
-  btn.classList.toggle("stop",running)
+    if (!response.ok) return false;
 
-  while(running){
-    let name=gen()
-    scanned++
-    statusEl.innerHTML=`<span class="spinner"></span>Checking ${name}...`
-    let ok=await check(name)
-    if(ok){
-      found++
-      statusEl.textContent=`AVAILABLE → ${name}`
-      statusEl.classList.add("available")
-      addFound(name)
-      sendWebhook(name)
-    }else{
-      statusEl.textContent=`Taken / Invalid`
-      statusEl.classList.remove("available")
-    }
-    statsEl.textContent=`Scanned: ${scanned} • Found: ${found}`
-    await new Promise(r=>setTimeout(r,parseInt(speedSlider.value)))
+    const json = await response.json();
+    return json.code === 0;  // 0 = available
+  } catch (err) {
+    console.error("Check failed:", err);
+    return false;
   }
 }
+
+function sendWebhook(name) {
+  const url = document.getElementById("webhook").value.trim();
+  if (!url) return;
+
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `✅ **Available Roblox Username:** \`${name}\`\n🚀 Join our server: https://discord.gg/kAAhfyKdvC`
+    })
+  }).catch(err => console.error("Webhook failed:", err));
+}
+
+async function toggle() {
+  running = !running;
+  const btn = document.getElementById("startBtn");
+  btn.textContent = running ? "Stop Scanning" : "Start Scanning";
+  btn.classList.toggle("stop", running);
+
+  while (running) {
+    const name = gen();
+    scanned++;
+    statusEl.innerHTML = `<span class="spinner"></span>Checking ${name}...`;
+
+    const available = await check(name);
+
+    if (available) {
+      found++;
+      statusEl.textContent = `AVAILABLE → ${name}`;
+      statusEl.classList.add("available");
+      addFound(name);
+      sendWebhook(name);
+    } else {
+      statusEl.textContent = `Taken / Invalid`;
+      statusEl.classList.remove("available");
+    }
+
+    statsEl.textContent = `Scanned: ${scanned} • Found: ${found}`;
+
+    await new Promise(r => setTimeout(r, parseInt(speedSlider.value)));
+  }
+}
+
+document.getElementById("startBtn").onclick = toggle;
 </script>
+
 </body>
 </html>
