@@ -259,7 +259,7 @@
     </div>
 
     <div class="footer">
-      Ultimate 2026 • discord.gg/kAAhfyKdvC • Enjoy responsibly
+      Ultimate 2026 edition • Enjoy responsibly
     </div>
   </div>
 
@@ -272,7 +272,7 @@
       event.target.classList.add('active');
     }
 
-    // Sniper logic (same as before, with scroll)
+    // Sniper logic
     let scanned = 0, found = 0, running = false, startTime = null;
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789_";
     const statusEl = document.getElementById("status");
@@ -322,7 +322,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `🎯 SNIPED: \`${name}\` (${name.length} chars) @ ${new Date().toLocaleTimeString()} • https://discord.gg/kAAhfyKdvC`
+          content: `🎯 **Available Roblox Username:** \`${name}\`\nLength: ${name.length} chars\nTime: ${new Date().toLocaleTimeString()}\nScan speed: ${speedSlider.value}ms`
         })
       }).catch(() => {});
     }
@@ -339,7 +339,7 @@
       d.innerHTML = `<span style="font-weight:700;">${n}</span><button onclick="navigator.clipboard.writeText('${n}').then(()=>alert('Copied!'))">Copy</button>`;
       foundList.prepend(d);
       if (foundList.children.length > 12) foundList.removeChild(foundList.lastChild);
-      foundList.parentElement.scrollTop = 0; // auto-scroll to top (newest)
+      foundList.parentElement.scrollTop = 0;
       if (autoCopy.checked) navigator.clipboard.writeText(n).catch(() => {});
       playSound();
     }
@@ -401,7 +401,7 @@
       }
     }
 
-    // User Search logic
+    // User Search
     async function searchUser() {
       const username = document.getElementById("searchUsername").value.trim();
       const resultEl = document.getElementById("searchResult");
