@@ -1,66 +1,183 @@
-<script>
-let min=3,max=5;
-let running=false;
-let last=null;
-let scans=0;
-let found=0;
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-const chars="abcdefghijklmnopqrstuvwxyz0123456789";
+<title>RBX Name Sniper</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0e0e0e;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 420px;
+  margin: 20px auto;
+  background: #1b1b1b;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 14px;
+  background: #2f2f2f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+button.green { background: #22c55e; }
+button.red { background: #ef4444; }
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row button {
+  flex: 1;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.stats {
+  margin-top: 5px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>RBX Name Sniper</h2>
+
+  <div class="row">
+    <button onclick="setLen(3,5)">3–5</button>
+    <button onclick="setLen(4,6)">4–6</button>
+    <button onclick="setLen(5,7)">5–7</button>
+  </div>
+
+  <input id="pattern" placeholder="Pattern (example: ab??)">
+
+  <button id="startBtn" class="green" onclick="toggle()">Start Scanning</button>
+
+  <div class="status" id="status">Idle</div>
+  <div class="stats" id="stats">📊 Scanned: 0 | ✅ Found: 0</div>
+
+  <button onclick="copyName()">📋 Copy Available</button>
+
+  <div class="footer">this was made by m7</div>
+</div>
+
+<script>
+let min = 3, max = 5;
+let running = false;
+let scanned = 0;
+let found = 0;
+let last = null;
+
+const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 function setLen(a,b){
-  min=a;max=b;
+  min = a;
+  max = b;
 }
 
 function randChar(){
-  return chars[Math.floor(Math.random()*chars.length)];
+  return chars[Math.floor(Math.random() * chars.length)];
 }
 
-function gen(){
-  let p=document.getElementById("pattern").value.toLowerCase();
-  if(p){
-    return [...p].map(c=>c=="?"?randChar():c).join("");
+function generate(){
+  const p = document.getElementById("pattern").value.toLowerCase();
+  if (p) {
+    let out = "";
+    for (let c of p) {
+      out += (c === "?") ? randChar() : c;
+    }
+    return out;
   }
-  let l=Math.floor(Math.random()*(max-min+1))+min;
-  return Array.from({length:l},randChar).join("");
+  const len = Math.floor(Math.random() * (max - min + 1)) + min;
+  let s = "";
+  for (let i = 0; i < len; i++) s += randChar();
+  return s;
 }
 
 async function toggle(){
-  running=!running;
-  document.getElementById("start").innerText = running ? "STOP" : "START";
+  running = !running;
+  const btn = document.getElementById("startBtn");
+  btn.textContent = running ? "Stop Scanning" : "Start Scanning";
+  btn.className = running ? "red" : "green";
 
-  while(running){
-    const name = gen();
-    scans++;
-    document.getElementById("stats").innerText =
-      `📊 Scanned: ${scans} | ✅ Found: ${found}`;
+  while (running) {
+    const name = generate();
+    scanned++;
+    updateStats();
 
     try {
-      const r = await fetch("/api/check",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
+      const r = await fetch("/api/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ u: name })
       });
 
       const j = await r.json();
-
-      if(j.available){
+      if (j.available) {
         found++;
-        last=name;
-        document.getElementById("status").innerText =
+        last = name;
+        document.getElementById("status").textContent =
           "AVAILABLE: " + name;
       }
+    } catch (e) {}
 
-    } catch(e){
-      console.log("scan error");
-    }
-
-    await new Promise(r=>setTimeout(r,800));
+    await new Promise(r => setTimeout(r, 900));
   }
 }
 
+function updateStats(){
+  document.getElementById("stats").textContent =
+    `📊 Scanned: ${scanned} | ✅ Found: ${found}`;
+}
+
 function copyName(){
-  if(last){
+  if (last) {
     navigator.clipboard.writeText(last);
   }
 }
 </script>
+
+</body>
+</html>
