@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ace’s UserScanner</title>
+<title>Ace’s RBLX Name Sniper ⚡</title>
 
 <style>
 :root {
@@ -61,13 +61,64 @@ h1 {
   background-clip: text;
 }
 
-.content { padding: 18px; }
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
 
-.len-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
+}
+
+.tab-content {
+  padding: 18px;
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.len-info {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--dim);
+}
+
+input[type="range"] {
+  width: 100%;
   margin-bottom: 14px;
+  accent-color: var(--accent);
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: #16161f;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow);
 }
 
 button {
@@ -89,17 +140,6 @@ button:hover {
   background: #25253a;
 }
 
-button.active {
-  background: var(--accent);
-  color: white;
-  box-shadow: 0 4px 14px var(--glow);
-}
-
-button.stop {
-  background: var(--danger);
-  color: white;
-}
-
 .main-btn {
   width: 100%;
   font-size: 1.05rem;
@@ -116,24 +156,6 @@ button.stop {
 @keyframes pulseGlow {
   from { box-shadow: 0 0 12px var(--glow); }
   to   { box-shadow: 0 0 28px var(--glow); }
-}
-
-input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
-  background: #16161f;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: white;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--glow);
 }
 
 .status {
@@ -164,7 +186,7 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   border: 1px solid var(--border);
   opacity: 0;
   transform: translateY(12px);
@@ -211,29 +233,40 @@ input:focus {
 <div class="container">
 
 <div class="header">
-<h1>Ace’s UserScanner</h1>
+<h1>Ace’s RBLX Name Sniper ⚡</h1>
 </div>
 
-<div class="content">
-
-<div class="len-buttons">
-<button class="active" onclick="setLen(3,5,this)">3–5</button>
-<button onclick="setLen(4,6,this)">4–6</button>
-<button onclick="setLen(5,7,this)">5–7</button>
+<div class="tabs">
+  <button class="tab-btn active" onclick="openTab('scanner')">Scanner</button>
+  <button class="tab-btn" onclick="openTab('found')">Found</button>
+  <button class="tab-btn" onclick="openTab('settings')">Settings</button>
 </div>
 
-<input id="pattern" placeholder="Pattern (ab??, x?x?, 69?? etc)">
-<input id="webhook" placeholder="Paste your Discord webhook (optional)">
+<div id="scanner" class="tab-content active">
+  <div class="len-info">Username length: <span id="lenVal">7</span></div>
+  <input type="range" id="lengthSlider" min="3" max="20" value="7">
 
-<button id="startBtn" class="main-btn" onclick="toggle()">Start Scanning</button>
+  <div class="len-info">Scan speed: <span id="speedVal">1500</span> ms</div>
+  <input type="range" id="speedSlider" min="500" max="5000" step="100" value="1500">
 
-<div class="status">
-<div id="status">Idle</div>
-<div id="stats">Scanned: 0 • Found: 0</div>
+  <input id="pattern" placeholder="Pattern (ab??, x?x?, 69?? etc)" type="text">
+  <input id="webhook" placeholder="Paste your Discord webhook (optional)" type="text">
+
+  <button id="startBtn" class="main-btn" onclick="toggle()">Start Scanning</button>
+
+  <div class="status">
+    <div id="status">Idle</div>
+    <div id="stats">Scanned: 0 • Found: 0</div>
+  </div>
 </div>
 
-<div id="foundList"></div>
+<div id="found" class="tab-content">
+  <div id="foundList"></div>
+  <p style="text-align:center; color:var(--dim); margin-top:20px;" id="noFound">No names found yet...</p>
+</div>
 
+<div id="settings" class="tab-content">
+  <p style="text-align:center; color:var(--dim);">Coming soon: proxy options, auto-copy, more filters...</p>
 </div>
 
 <div class="footer">
@@ -243,35 +276,37 @@ made by Aceii_ • discord.gg/kAAhfyKdvC
 </div>
 
 <script>
-let min = 3, max = 5;
 let running = false;
 let scanned = 0;
-let found = 0;
+let foundCount = 0;
 
 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 const statusEl = document.getElementById("status");
 const statsEl = document.getElementById("stats");
 const foundList = document.getElementById("foundList");
+const noFoundEl = document.getElementById("noFound");
 const proxy = "https://auth.roproxy.com";
 const birthday = "2000-01-01";
 
-function setLen(a, b, el) {
-  min = a; max = b;
-  document.querySelectorAll(".len-buttons button").forEach(x => x.classList.remove("active"));
-  el.classList.add("active");
-}
+const lengthSlider = document.getElementById("lengthSlider");
+const speedSlider = document.getElementById("speedSlider");
+const lenVal = document.getElementById("lenVal");
+const speedVal = document.getElementById("speedVal");
+
+lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
+speedSlider.oninput  = () => speedVal.textContent  = speedSlider.value;
 
 function rand() {
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
 function gen() {
-  const p = document.getElementById("pattern").value.toLowerCase().trim();
-  if (p) {
-    return [...p].map(c => c === "?" ? rand() : c).join("");
+  const pattern = document.getElementById("pattern").value.toLowerCase().trim();
+  if (pattern) {
+    return [...pattern].map(c => c === "?" ? rand() : c).join("");
   }
-  const l = Math.floor(Math.random() * (max - min + 1)) + min;
-  return Array.from({length: l}, rand).join("");
+  const len = parseInt(lengthSlider.value);
+  return Array.from({length: len}, rand).join("");
 }
 
 async function check(name) {
@@ -284,9 +319,7 @@ async function check(name) {
         birthday: birthday
       })
     });
-
     if (!res.ok) return false;
-
     const json = await res.json();
     return json.code === 0;
   } catch {
@@ -297,17 +330,17 @@ async function check(name) {
 function sendWebhook(name) {
   const url = document.getElementById("webhook").value.trim();
   if (!url) return;
-
   fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      content: `✅ **Available Roblox Username:** \`${name}\`\nLength: ${name.length}\n🚀 Join: https://discord.gg/kAAhfyKdvC`
+      content: `⚡ **Available Roblox Name:** \`${name}\` (len ${name.length})\nJoin: https://discord.gg/kAAhfyKdvC`
     })
   }).catch(() => {});
 }
 
 function addFound(n) {
+  noFoundEl.style.display = "none";
   const d = document.createElement("div");
   d.className = "found-item";
   d.innerHTML = `<span>${n}</span><button onclick="navigator.clipboard.writeText('${n}')">Copy</button>`;
@@ -329,7 +362,7 @@ async function toggle() {
     const ok = await check(name);
 
     if (ok) {
-      found++;
+      foundCount++;
       statusEl.textContent = `AVAILABLE → ${name}`;
       statusEl.classList.add("available");
       addFound(name);
@@ -339,10 +372,17 @@ async function toggle() {
       statusEl.classList.remove("available");
     }
 
-    statsEl.textContent = `Scanned: ${scanned} • Found: ${found}`;
+    statsEl.textContent = `Scanned: ${scanned} • Found: ${foundCount}`;
 
-    await new Promise(r => setTimeout(r, 1200));
+    await new Promise(r => setTimeout(r, parseInt(speedSlider.value)));
   }
+}
+
+function openTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
 }
 </script>
 
