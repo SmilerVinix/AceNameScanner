@@ -20,6 +20,9 @@
       --danger: #f87171;
       --blur: blur(24px);
       --shadow: 0 16px 48px rgba(0,0,0,0.65);
+      --terminal-bg: #0d0d0d;
+      --terminal-green: #00ff41;
+      --terminal-dim: #00aa2a;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -219,34 +222,20 @@
       100% { background-position: 200% }
     }
 
-    .found-item, .thread-item {
-      padding: 14px 18px;
-      border-radius: 16px;
-      margin-bottom: 10px;
-      font-size: 1.05rem;
-      animation: popIn 0.5s ease-out;
-    }
-
     .found-item {
       background: rgba(34,197,94,0.18);
       border: 1px solid rgba(34,197,94,0.45);
+      padding: 16px 20px;
+      border-radius: 16px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .thread-item {
-      background: rgba(30,30,50,0.6);
-      border-left: 4px solid #64748b;
-    }
-
-    .thread-item.found {
-      background: rgba(34,197,94,0.12);
-      border-left-color: #22c55e;
+      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.92) translateY(20px); opacity: 0; }
+      0% { transform: scale(0.7) translateY(30px); opacity: 0; }
       100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
@@ -258,22 +247,78 @@
       -webkit-text-fill-color: transparent;
     }
 
-    #foundContainer, #threadContainer {
-      max-height: 380px;
+    /* ────────────── TERMINAL THREAD STYLE ────────────── */
+    #threadContainer {
+      background: var(--terminal-bg);
+      border: 1px solid #003300;
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 480px;
       overflow-y: auto;
-      padding-right: 6px;
-      margin-top: 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.98rem;
+      color: var(--terminal-green);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+      position: relative;
+      line-height: 1.45;
     }
 
-    #foundContainer::-webkit-scrollbar,
+    .thread-line {
+      margin-bottom: 4px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .thread-line.found {
+      color: #00ff9d;
+      font-weight: bold;
+    }
+
+    .thread-line .time {
+      color: #004d00;
+      margin-right: 12px;
+    }
+
+    .thread-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--terminal-green);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
     #threadContainer::-webkit-scrollbar {
       width: 6px;
     }
 
-    #foundContainer::-webkit-scrollbar-thumb,
     #threadContainer::-webkit-scrollbar-thumb {
-      background: linear-gradient(var(--accent), var(--accent-glow));
+      background: #004d00;
       border-radius: 3px;
+    }
+
+    .scanline {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,255,65,0.03) 2px,
+        rgba(0,255,65,0.03) 4px
+      );
+      animation: scan 10s linear infinite;
+    }
+
+    @keyframes scan {
+      0%   { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
     }
 
     .footer {
@@ -295,6 +340,7 @@
       h1 { font-size: 1.8rem; }
       .content { padding: 20px; }
       #startBtn { font-size: 1.1rem; padding: 16px; }
+      #threadContainer { font-size: 0.92rem; }
     }
   </style>
 </head>
@@ -349,18 +395,22 @@
     <div id="foundContainer"></div>
   </div>
 
-  <div class="content" id="threadPanel" style="display:none">
-    <div id="threadContainer"></div>
+  <div class="content" id="threadPanel" style="display:none; padding:0;">
+    <div id="threadContainer">
+      <div class="scanline"></div>
+      <div class="thread-line" style="color:#006600;">[SYSTEM] Terminal initialized — 2026-02-04 06:39 EST</div>
+      <div class="thread-line" style="color:#006600;">[INFO] Waiting for sniper activation...</div>
+    </div>
   </div>
 
   <div class="footer">
-    Columbus, Ohio • February 04, 2026 • 06:37 AM EST
+    Columbus, Ohio • February 04, 2026 • 06:39 AM EST
   </div>
 </div>
 
 <script>
 // ──────────────────────────────────────────────
-//  Updated logic – instant found, fading confetti, full thread
+//  Logic with terminal-style thread
 // ──────────────────────────────────────────────
 
 const panels = {
@@ -388,6 +438,7 @@ const scannedEl      = document.getElementById('scanned');
 const foundEl        = document.getElementById('foundCount');
 const speedEl        = document.getElementById('speedometer');
 const badge          = document.getElementById('statusBadge');
+const threadCont     = document.getElementById('threadContainer');
 
 let running = false;
 let scanned = 0;
@@ -422,24 +473,21 @@ function generateName() {
   return pat.replace(/\?/g, randChar);
 }
 
-function addToThread(name, isAvailable) {
-  const container = document.getElementById('threadContainer');
-  const item = document.createElement('div');
-  item.className = 'thread-item' + (isAvailable ? ' found' : '');
-  item.innerHTML = `
-    <span style="font-weight:${isAvailable ? '700' : '400'};">
-      ${isAvailable ? '✓ ' : '✗ '} ${name}
-    </span>
-    <span style="font-size:0.85rem; color:var(--dim);">
-      ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})}
-    </span>
+function logToThread(text, isFound = false) {
+  const line = document.createElement('div');
+  line.className = 'thread-line' + (isFound ? ' found' : '');
+  line.innerHTML = `
+    <span class="time">[${new Date().toLocaleTimeString([], {hour12:false})}]</span>
+    ${text}
   `;
-  container.prepend(item);
+  threadCont.insertBefore(line, threadCont.firstChild);
 
-  // keep only last 80 entries
-  if (container.children.length > 80) {
-    container.removeChild(container.lastChild);
+  // keep ~120 lines max
+  if (threadCont.children.length > 120) {
+    threadCont.removeChild(threadCont.lastChild);
   }
+
+  threadCont.scrollTop = 0;
 }
 
 function addFound(name) {
@@ -464,7 +512,7 @@ function addFound(name) {
   `;
   container.prepend(item);
 
-  // instant confetti with fade-out
+  // trigger confetti
   confettiBurst();
 }
 
@@ -494,6 +542,12 @@ startBtn.onclick = async () => {
   startBtn.classList.toggle('stop', running);
   badge.textContent = running ? 'Scanning…' : 'Idle';
 
+  if (running) {
+    logToThread("<span style='color:#00aa2a'>[SYSTEM] Sniper thread activated</span>");
+  } else {
+    logToThread("<span style='color:#ff5555'>[SYSTEM] Sniper thread terminated</span>");
+  }
+
   if (!running) {
     statusEl.textContent = 'Stopped';
     return;
@@ -503,7 +557,6 @@ startBtn.onclick = async () => {
   scanned = found = 0;
   scannedEl.textContent = foundEl.textContent = '0';
   document.getElementById('foundContainer').innerHTML = '';
-  document.getElementById('threadContainer').innerHTML = '';
 
   while (running) {
     const name = generateName();
@@ -515,8 +568,8 @@ startBtn.onclick = async () => {
 
     const available = await check(name);
 
-    // INSTANT thread update + found list if available
-    addToThread(name, available);
+    // Log EVERY check instantly to terminal
+    logToThread(`${available ? '✓' : '✗'} ${name}`, available);
 
     if (available) {
       statusEl.classList.add('hit');
@@ -532,7 +585,7 @@ startBtn.onclick = async () => {
 };
 
 // ──────────────────────────────────────────────
-//  Improved confetti – particles fade out
+//  Confetti with proper fade-out
 // ──────────────────────────────────────────────
 
 function confettiBurst() {
@@ -550,36 +603,32 @@ function confettiBurst() {
       color: ['#22c55e', '#4ade80', '#86efac', '#a78bfa', '#c084fc'][Math.floor(Math.random()*5)],
       vx: (Math.random() - 0.5) * 12,
       vy: (Math.random() - 0.5) * 10 - 5,
-      life: 1,           // opacity / lifetime
-      decay: 0.015 + Math.random() * 0.01
+      life: 1,
+      decay: 0.012 + Math.random() * 0.008
     });
   }
 
   function animate() {
     ctx.clearRect(0, 0, c.width, c.height);
 
-    particles = particles.filter(p => p.life > 0);
+    particles = particles.filter(p => p.life > 0.01);
 
     particles.forEach(p => {
       ctx.save();
       ctx.globalAlpha = p.life;
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.18; // gravity
+      p.vy += 0.18;
       p.life -= p.decay;
     });
 
-    if (particles.length > 0) {
-      requestAnimationFrame(animate);
-    } else {
-      ctx.clearRect(0, 0, c.width, c.height);
-    }
+    if (particles.length > 0) requestAnimationFrame(animate);
   }
 
   animate();
