@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RBX Name Sniper • Fast & Clean</title>
+  <title>RBX Name Sniper • 2026</title>
 
   <style>
     :root {
@@ -20,12 +20,7 @@
       --glow: rgba(34,197,94,0.18);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: var(--bg);
       color: var(--text);
@@ -34,7 +29,6 @@
       padding: 16px;
       line-height: 1.5;
     }
-
     .container {
       max-width: 420px;
       margin: 0 auto;
@@ -43,16 +37,13 @@
       border: 1px solid var(--border);
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       overflow: hidden;
-      backdrop-filter: blur(8px);
     }
-
     .header {
       padding: 20px 24px;
       background: linear-gradient(to bottom, #16161f, transparent);
       text-align: center;
       border-bottom: 1px solid var(--border);
     }
-
     h1 {
       font-size: 1.6rem;
       font-weight: 700;
@@ -61,18 +52,13 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    .content {
-      padding: 20px 24px 24px;
-    }
-
+    .content { padding: 20px 24px 24px; }
     .len-buttons {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 20px;
     }
-
     button {
       padding: 12px;
       font-size: 0.95rem;
@@ -84,27 +70,14 @@
       background: #1e1e2e;
       color: var(--text-dim);
     }
-
-    button:hover {
-      background: #25253a;
-      transform: translateY(-1px);
-    }
-
+    button:hover { background: #25253a; transform: translateY(-1px); }
     button.active {
       background: var(--accent);
       color: white;
       box-shadow: 0 0 0 3px var(--glow);
     }
-
-    button.stop {
-      background: var(--danger);
-      color: white;
-    }
-
-    button.stop:hover {
-      background: var(--danger-dark);
-    }
-
+    button.stop { background: var(--danger); color: white; }
+    button.stop:hover { background: var(--danger-dark); }
     input[type="text"] {
       width: 100%;
       padding: 14px 16px;
@@ -114,16 +87,13 @@
       border-radius: 10px;
       color: white;
       font-size: 1rem;
-      font-family: inherit;
       outline: none;
       transition: border-color 0.2s;
     }
-
     input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--glow);
     }
-
     .main-btn {
       width: 100%;
       padding: 16px;
@@ -132,7 +102,6 @@
       margin-bottom: 16px;
       border-radius: 12px;
     }
-
     .status-panel {
       background: rgba(30,30,46,0.6);
       border-radius: 12px;
@@ -141,34 +110,26 @@
       border: 1px solid var(--border);
       text-align: center;
     }
-
     #status {
       font-size: 1.15rem;
       font-weight: 600;
       margin-bottom: 8px;
       min-height: 1.4em;
     }
-
     #status.available {
       color: var(--accent);
       text-shadow: 0 0 10px rgba(34,197,94,0.5);
     }
-
     #stats {
       font-size: 0.95rem;
       color: var(--text-dim);
     }
-
-    .found-list {
-      margin: 16px 0;
-    }
-
+    .found-list { margin: 16px 0; }
     .found-list h3 {
       font-size: 0.9rem;
       color: var(--text-dim);
       margin-bottom: 8px;
     }
-
     .found-item {
       display: flex;
       justify-content: space-between;
@@ -179,7 +140,6 @@
       margin-bottom: 6px;
       font-size: 0.95rem;
     }
-
     .found-item button {
       padding: 6px 12px;
       font-size: 0.8rem;
@@ -187,20 +147,16 @@
       color: white;
       min-width: 70px;
     }
-
     .footer {
       text-align: center;
       padding: 16px;
       font-size: 0.78rem;
       color: var(--text-dim);
-      opacity: 0.7;
       border-top: 1px solid var(--border);
     }
-
     .spinner {
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 18px; height: 18px;
       border: 3px solid rgba(255,255,255,0.15);
       border-top-color: var(--accent);
       border-radius: 50%;
@@ -208,11 +164,7 @@
       margin-right: 8px;
       vertical-align: middle;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
+    @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 480px) {
       body { padding: 12px; }
       .container { border-radius: 12px; }
@@ -235,7 +187,7 @@
       <button onclick="setLen(5,7)">5–7</button>
     </div>
 
-    <input id="pattern" placeholder="Pattern (e.g. cat?? , nitro3?, ???v)" />
+    <input id="pattern" placeholder="Pattern e.g. god??  nitro?  x?x?" />
 
     <button id="startBtn" class="main-btn green" onclick="toggle()">
       Start Scanning
@@ -248,12 +200,11 @@
 
     <div class="found-list" id="foundList">
       <h3>Recently Found</h3>
-      <!-- items added here dynamically -->
     </div>
 
   </div>
 
-  <div class="footer">made by m7 • 2026</div>
+  <div class="footer">made by m7 • 2026 • use at your own risk</div>
 </div>
 
 <script>
@@ -261,7 +212,7 @@ let min = 3, max = 5;
 let running = false;
 let scanned = 0;
 let foundCount = 0;
-let foundNames = []; // keep last 5
+let foundNames = [];
 
 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 const statusEl = document.getElementById("status");
@@ -270,11 +221,15 @@ const startBtn = document.getElementById("startBtn");
 const foundList = document.getElementById("foundList");
 const patternInput = document.getElementById("pattern");
 
+// ─── CONFIG ────────────────────────────────────────
+const useProxy = true;                    // set false to try direct (may hit CORS)
+const proxyBase = "https://auth.roproxy.com";  // good public proxy 2026
+// const proxyBase = "https://users.roproxy.com"; // alt
+const birthday = "2000-01-01";            // fixed old date — avoids age gates
+
 function setLen(a, b) {
   min = a; max = b;
-  document.querySelectorAll('.len-buttons button').forEach(btn => {
-    btn.classList.remove('active');
-  });
+  document.querySelectorAll('.len-buttons button').forEach(btn => btn.classList.remove('active'));
   event.target.classList.add('active');
 }
 
@@ -286,9 +241,7 @@ function generate() {
   const p = patternInput.value.trim().toLowerCase();
   if (p) {
     let out = "";
-    for (let c of p) {
-      out += (c === "?") ? randChar() : c;
-    }
+    for (let c of p) out += (c === "?") ? randChar() : c;
     return out;
   }
   const len = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -299,7 +252,7 @@ function generate() {
 
 function addFound(name) {
   foundNames.unshift(name);
-  if (foundNames.length > 5) foundNames.pop();
+  if (foundNames.length > 6) foundNames.pop();
 
   foundList.innerHTML = `<h3>Recently Found</h3>`;
   foundNames.forEach(n => {
@@ -311,6 +264,22 @@ function addFound(name) {
     `;
     foundList.appendChild(div);
   });
+}
+
+async function checkAvailable(name) {
+  const base = useProxy ? proxyBase : "https://auth.roblox.com";
+  const url = `${base}/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=${birthday}`;
+
+  try {
+    const r = await fetch(url, { method: "GET", cache: "no-store" });
+    if (!r.ok) return false; // treat errors as not-available / skip
+
+    const j = await r.json();
+    // code: 0 = valid & available, 10 = taken, 1 = invalid format, etc.
+    return j.code === 0;
+  } catch (e) {
+    return false;
+  }
 }
 
 async function toggle() {
@@ -326,6 +295,7 @@ async function toggle() {
     startBtn.classList.add("green");
     statusEl.innerHTML = "Idle";
     statusEl.classList.remove("available");
+    return;
   }
 
   while (running) {
@@ -335,28 +305,21 @@ async function toggle() {
 
     statusEl.innerHTML = `<span class="spinner"></span>Checking ${name}...`;
 
-    try {
-      const r = await fetch("/api/check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ u: name })
-      });
+    const isAvail = await checkAvailable(name);
 
-      if (!r.ok) throw new Error();
-
-      const j = await r.json();
-      if (j.available) {
-        foundCount++;
-        statusEl.textContent = `AVAILABLE → ${name}`;
-        statusEl.classList.add("available");
-        addFound(name);
-        updateStats();
-      }
-    } catch (e) {
-      // silent fail
+    if (isAvail) {
+      foundCount++;
+      statusEl.textContent = `AVAILABLE → ${name}`;
+      statusEl.classList.add("available");
+      addFound(name);
+      updateStats();
+      // optional: await new Promise(r=>setTimeout(r,3000)); // longer pause on hit
+    } else {
+      statusEl.textContent = `Taken / Invalid: ${name}`;
+      statusEl.classList.remove("available");
     }
 
-    await new Promise(r => setTimeout(r, 920)); // ~1 req/sec
+    await new Promise(r => setTimeout(r, 1200)); // ~0.8 req/sec — safe-ish
   }
 }
 
