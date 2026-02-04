@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RBX Name Sniper</title>
+<style>
+body {
+  background:#0f0f0f;
+  color:white;
+  font-family:system-ui;
+}
+.card {
+  max-width:360px;
+  margin:20px auto;
+  background:#1a1a1a;
+  padding:15px;
+  border-radius:10px;
+}
+button, input {
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  background:#2a2a2a;
+  color:white;
+  border:none;
+  border-radius:6px;
+}
+button.active { background:#3aa86d }
+.small { opacity:.6; font-size:12px; text-align:center }
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h3>RBX Name Sniper</h3>
+
+  <div>
+    <button onclick="setLen(3,5)">3–5</button>
+    <button onclick="setLen(4,6)">4–6</button>
+    <button onclick="setLen(5,7)">5–7</button>
+  </div>
+
+  <input id="pattern" placeholder="Pattern (ab??)">
+  <button id="start" onclick="toggle()">START</button>
+
+  <div id="status">Idle</div>
+  <button onclick="copyName()">📋 Copy Available</button>
+
+  <div class="small">this was made by m7</div>
+</div>
+
+<script>
+let min=3,max=5,run=false,last=null;
+const chars="abcdefghijklmnopqrstuvwxyz0123456789";
+
+function setLen(a,b){min=a;max=b}
+
+function randChar(){return chars[Math.floor(Math.random()*chars.length)]}
+
+function gen(){
+  let p=document.getElementById("pattern").value.toLowerCase();
+  if(p){
+    return [...p].map(c=>c=="?"?randChar():c).join("");
+  }
+  let l=Math.floor(Math.random()*(max-min+1))+min;
+  return Array.from({length:l},randChar).join("");
+}
+
+async function toggle(){
+  run=!run;
+  document.getElementById("start").innerText=run?"STOP":"START";
+  while(run){
+    let n=gen();
+    let r=await fetch("/api/check",{method:"POST",body:JSON.stringify({u:n})});
+    let j=await r.json();
+    if(j.ok){
+      last=n;
+      document.getElementById("status").innerText="AVAILABLE: "+n;
+    }
+    await new Promise(r=>setTimeout(r,800));
+  }
+}
+
+function copyName(){
+  if(last) navigator.clipboard.writeText(last);
+}
+</script>
+</body>
+</html>
