@@ -1,0 +1,66 @@
+<script>
+let min=3,max=5;
+let running=false;
+let last=null;
+let scans=0;
+let found=0;
+
+const chars="abcdefghijklmnopqrstuvwxyz0123456789";
+
+function setLen(a,b){
+  min=a;max=b;
+}
+
+function randChar(){
+  return chars[Math.floor(Math.random()*chars.length)];
+}
+
+function gen(){
+  let p=document.getElementById("pattern").value.toLowerCase();
+  if(p){
+    return [...p].map(c=>c=="?"?randChar():c).join("");
+  }
+  let l=Math.floor(Math.random()*(max-min+1))+min;
+  return Array.from({length:l},randChar).join("");
+}
+
+async function toggle(){
+  running=!running;
+  document.getElementById("start").innerText = running ? "STOP" : "START";
+
+  while(running){
+    const name = gen();
+    scans++;
+    document.getElementById("stats").innerText =
+      `📊 Scanned: ${scans} | ✅ Found: ${found}`;
+
+    try {
+      const r = await fetch("/api/check",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ u: name })
+      });
+
+      const j = await r.json();
+
+      if(j.available){
+        found++;
+        last=name;
+        document.getElementById("status").innerText =
+          "AVAILABLE: " + name;
+      }
+
+    } catch(e){
+      console.log("scan error");
+    }
+
+    await new Promise(r=>setTimeout(r,800));
+  }
+}
+
+function copyName(){
+  if(last){
+    navigator.clipboard.writeText(last);
+  }
+}
+</script>
