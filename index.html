@@ -13,63 +13,68 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{
       min-height:100vh;
-      background:linear-gradient(135deg,#0a0015,#12002a,#1a003f);
+      background:linear-gradient(135deg,#0a0015,#180033,#2a004d);
       color:#e0e0ff;
       font-family:'Roboto Mono',monospace;
       background-attachment:fixed;
+      overflow-x:hidden;
     }
     .app{
-      width:100%;max-width:480px;margin:30px auto;padding:28px 24px;
-      background:rgba(15,5,35,.78);border-radius:18px;
-      border:1px solid rgba(255,0,120,.18);
-      box-shadow:0 0 60px rgba(180,0,255,.25),inset 0 0 30px rgba(120,0,255,.08);
-      backdrop-filter:blur(10px);position:relative;overflow:hidden;
+      width:100%;max-width:500px;margin:40px auto;padding:32px 28px;
+      background:rgba(12,4,28,0.82);border-radius:24px;
+      border:1px solid rgba(255,0,140,0.22);
+      box-shadow:0 0 80px rgba(200,0,255,0.35),inset 0 0 40px rgba(140,0,255,0.12);
+      backdrop-filter:blur(14px);position:relative;overflow:hidden;
     }
-    .app::before{
-      content:"";position:absolute;inset:-50%;
-      background:radial-gradient(circle at 30% 20%,rgba(255,0,180,.12),transparent 40%);
-      pointer-events:none;animation:pulse-bg 18s infinite alternate;
-    }
-    @keyframes pulse-bg{0%{transform:scale(1.1);opacity:.5}100%{transform:scale(1.4);opacity:.8}}
     h1{
-      text-align:center;font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;
-      background:linear-gradient(90deg,#ff00aa,#aa00ff,#00ffff);
+      text-align:center;font-family:'Orbitron',sans-serif;font-size:2.6rem;font-weight:900;
+      background:linear-gradient(90deg,#ff00b3,#c700ff,#00eaff,#ff00b3);
+      background-size:300%;
       -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 0 20px rgba(170,0,255,.7);margin-bottom:24px;letter-spacing:2px;
+      text-shadow:0 0 25px rgba(180,0,255,0.8);
+      margin-bottom:24px;letter-spacing:3px;
+      animation:gradient 8s linear infinite;
     }
-    .controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+    @keyframes gradient{to{background-position:300% 0}}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
     select,button{
-      width:100%;padding:14px;border-radius:10px;
-      border:1px solid rgba(180,0,255,.4);background:rgba(30,10,60,.6);color:#e0e0ff;
-      font-size:1rem;font-weight:500;cursor:pointer;transition:all .22s;
-    }
-    select:hover,select:focus{
-      border-color:#ff00cc;box-shadow:0 0 16px rgba(255,0,200,.4);background:rgba(50,20,90,.7);
+      width:100%;padding:14px;border-radius:12px;
+      border:1px solid rgba(200,0,255,0.45);
+      background:rgba(35,12,70,0.65);
+      color:#e0e0ff;font-size:1rem;cursor:pointer;
     }
     button{
       grid-column:span 2;
-      background:linear-gradient(90deg,#ff0066,#cc00ff);border:none;font-weight:700;
-      letter-spacing:1px;box-shadow:0 6px 20px rgba(200,0,180,.5);text-transform:uppercase;
+      background:linear-gradient(90deg,#ff0077,#dd00ff,#aa00ff);
+      border:none;font-weight:800;letter-spacing:1.5px;
     }
-    button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 30px rgba(220,0,200,.7)}
-    button.stop{background:linear-gradient(90deg,#ff3366,#ff4444);box-shadow:0 6px 20px rgba(255,60,80,.5)}
-    .stats{display:flex;justify-content:space-between;margin:18px 0;font-size:.95rem;color:#bb99ff;text-shadow:0 0 8px rgba(180,100,255,.5)}
-    .status{text-align:center;font-size:1.3rem;font-weight:700;margin:12px 0 20px;letter-spacing:2px}
-    .status.running{color:#00ffaa;text-shadow:0 0 15px #00ffaa}
-    .status.stopped{color:#ff6666;text-shadow:0 0 15px #ff6666}
+    button.stop{
+      background:linear-gradient(90deg,#ff4488,#ff3366,#ff1a4d);
+    }
+    .stats{
+      display:flex;justify-content:space-between;
+      margin:18px 0;font-size:0.95rem;color:#cc99ff;
+    }
+    .status{
+      text-align:center;font-size:1.4rem;font-weight:800;
+      margin-bottom:20px;letter-spacing:3px;
+    }
+    .status.running{color:#00ffcc}
+    .status.stopped{color:#ff7777}
     .log{
-      background:rgba(10,5,30,.75);border-radius:12px;padding:14px;max-height:380px;
-      overflow-y:auto;font-size:.94rem;border:1px solid rgba(120,0,255,.15);
-      box-shadow:inset 0 0 20px rgba(0,0,0,.6);
+      background:rgba(8,3,25,0.8);
+      border-radius:14px;padding:14px;
+      max-height:380px;overflow-y:auto;
+      font-size:0.9rem;
+      border:1px solid rgba(140,0,255,0.2);
     }
-    .log-entry{margin:6px 0;padding:6px 10px;border-radius:6px;background:rgba(20,10,50,.4);transition:all .18s}
-    .ok{background:rgba(0,220,140,.18);color:#00ffbb}
-    .bad{background:rgba(255,60,80,.18);color:#ff7777}
-    .error{background:rgba(255,180,60,.18);color:#ffcc66}
-    .log::-webkit-scrollbar{width:6px}
-    .log::-webkit-scrollbar-track{background:rgba(40,20,80,.3)}
-    .log::-webkit-scrollbar-thumb{background:#aa44ff;border-radius:3px}
-    @keyframes glow{0%,100%{text-shadow:0 0 10px currentColor}50%{text-shadow:0 0 25px currentColor,0 0 40px currentColor}}
+    .log-entry{
+      margin:6px 0;padding:6px 10px;border-radius:8px;
+      background:rgba(25,12,60,0.5);
+    }
+    .ok{color:#00ffcc}
+    .bad{color:#ff9999}
+    .error{color:#ffdd88}
   </style>
 </head>
 <body>
@@ -89,7 +94,7 @@
     </select>
 
     <select id="speed">
-      <option value="1">1 check/sec</option>
+      <option value="1">1 / sec</option>
       <option value="2">2 / sec</option>
       <option value="3" selected>3 / sec</option>
       <option value="5">5 / sec (risky)</option>
@@ -105,103 +110,115 @@
   </div>
 
   <div class="status stopped" id="status">OFFLINE</div>
-
   <div class="log" id="log"></div>
 </div>
 
 <script>
 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-const logEl   = document.getElementById("log");
+const logEl = document.getElementById("log");
 const statusEl = document.getElementById("status");
-const countEl  = document.getElementById("count");
-const availEl  = document.getElementById("avail");
+const countEl = document.getElementById("count");
+const availEl = document.getElementById("avail");
 const startBtn = document.getElementById("start");
-const stopBtn  = document.getElementById("stop");
+const stopBtn = document.getElementById("stop");
 
 let running = false;
-let timer;
 let checked = 0;
 let available = 0;
 
-function randomName(len) {
-  let s = "";
-  for (let i = 0; i < len; i++) {
-    s += chars[Math.floor(Math.random() * chars.length)];
+function randomName(len){
+  let s="";
+  for(let i=0;i<len;i++){
+    s+=chars[Math.floor(Math.random()*chars.length)];
   }
   return s;
 }
 
-function addLog(msg, type = "info") {
-  const div = document.createElement("div");
-  div.className = `log-entry ${type}`;
-  div.textContent = msg;
-  logEl.insertAdjacentElement("afterbegin", div);
-  while (logEl.children.length > 150) logEl.removeChild(logEl.lastChild);
-}
-
-async function check() {
-  if (!running) return;
-
-  const len = parseInt(document.getElementById("length").value);
-  const name = randomName(len);
-
-  checked++;
-  countEl.textContent = checked;
-
-  try {
-    const target = `https://auth.roblox.com/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=2000-01-01&context=Signup`;
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(target);
-
-    const r = await fetch(proxyUrl, {
-      method: "GET",
-      cache: "no-cache"
-    });
-
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-
-    const data = await r.json();
-
-    if (data.code === 0) {
-      available++;
-      availEl.textContent = available;
-      addLog(`✔  ${name}  → AVAILABLE`, "ok");
-    } else if (data.code === 10) {
-      addLog(`✖  ${name}  taken`, "bad");
-    } else {
-      addLog(`⚠  ${name}  → ${data.message || "invalid"} (code: ${data.code})`, "error");
-    }
-  } catch (err) {
-    addLog(`⚠ ERROR  ${name}  → ${err.message || "network/proxy issue"}`, "error");
+function addLog(msg,type="info"){
+  const d=document.createElement("div");
+  d.className="log-entry "+type;
+  d.textContent=msg;
+  logEl.prepend(d);
+  if(logEl.children.length>200){
+    logEl.removeChild(logEl.lastChild);
   }
 }
 
-function startScan() {
-  if (running) return;
-  running = true;
-  checked = 0; available = 0;
-  countEl.textContent = "0";
-  availEl.textContent = "0";
+async function check(){
+  if(!running) return;
 
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
-  statusEl.textContent = "SCANNING";
-  statusEl.className = "status running";
+  const len=parseInt(document.getElementById("length").value);
+  const name=randomName(len);
 
-  const baseMs = 1000 / parseFloat(document.getElementById("speed").value);
-  timer = setInterval(check, baseMs);
+  checked++;
+  countEl.textContent=checked;
+
+  try{
+    const r=await fetch("https://auth.roproxy.com/v1/usernames/validate",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json"
+      },
+      body:JSON.stringify({
+        username:name,
+        birthday:"2000-01-01",
+        context:"Signup"
+      })
+    });
+
+    if(!r.ok) throw new Error("HTTP "+r.status);
+
+    const data=await r.json();
+
+    if(data.code===0){
+      available++;
+      availEl.textContent=available;
+      addLog("✔ "+name+" → AVAILABLE","ok");
+    }else if(data.code===10){
+      addLog("✖ "+name+" → taken","bad");
+    }else{
+      addLog("⚠ "+name+" → "+(data.message||"invalid"),"error");
+    }
+  }catch(e){
+    addLog("⛔ "+name+" → blocked / rate-limited","error");
+  }
+
+  await new Promise(r=>setTimeout(r,450+Math.random()*400));
 }
 
-function stopScan() {
-  running = false;
-  clearInterval(timer);
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
-  statusEl.textContent = "OFFLINE";
-  statusEl.className = "status stopped";
+async function startScan(){
+  if(running) return;
+  running=true;
+
+  checked=0; available=0;
+  countEl.textContent="0";
+  availEl.textContent="0";
+
+  startBtn.disabled=true;
+  stopBtn.disabled=false;
+  statusEl.textContent="SCANNING";
+  statusEl.className="status running";
+
+  const delay=1000/parseFloat(document.getElementById("speed").value);
+
+  while(running){
+    await check();
+    await new Promise(r=>setTimeout(r,delay));
+  }
 }
 
-startBtn.onclick = startScan;
-stopBtn.onclick  = stopScan;
+function stopScan(){
+  running=false;
+  startBtn.disabled=false;
+  stopBtn.disabled=true;
+  statusEl.textContent="OFFLINE";
+  statusEl.className="status stopped";
+}
+
+startBtn.onclick=startScan;
+stopBtn.onclick=stopScan;
 </script>
+
 </body>
 </html>
