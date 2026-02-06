@@ -1,690 +1,316 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>RBLX Sniper • 2026 Reloaded</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RedShift UserSearcher</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-1: #0a0012;
-      --bg-2: #11001f;
-      --card: rgba(18, 18, 35, 0.82);
-      --card-border: rgba(120, 100, 255, 0.14);
-      --text: #f0f4ff;
-      --dim: #b0b8ff;
-      --accent: #7c3aed;
-      --accent-glow: #a78bfa;
-      --success: #22c55e;
-      --success-glow: #4ade80;
-      --danger: #f87171;
-      --blur: blur(24px);
-      --shadow: 0 16px 48px rgba(0,0,0,0.65);
-      --terminal-bg: #0d0d0d;
-      --terminal-green: #00ff41;
-      --terminal-dim: #00aa2a;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
-      padding: 10px 12px;
-      background-attachment: fixed;
+      background: linear-gradient(135deg, #0a0015, #12002a, #1a003f);
+      color: #e0e0ff;
+      font-family: 'Roboto Mono', monospace;
       overflow-x: hidden;
+      background-attachment: fixed;
     }
 
-    .container {
-      max-width: 100%;
-      margin: 0 auto;
-      background: var(--card);
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
-      border-radius: 28px;
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow);
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin: 30px auto;
+      padding: 28px 24px;
+      background: rgba(15, 5, 35, 0.78);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 0, 120, 0.18);
+      box-shadow: 
+        0 0 60px rgba(180, 0, 255, 0.25),
+        inset 0 0 30px rgba(120, 0, 255, 0.08);
+      backdrop-filter: blur(10px);
+      position: relative;
       overflow: hidden;
     }
 
-    header {
-      padding: 20px 24px 16px;
-      text-align: center;
-      background: linear-gradient(to bottom, rgba(124,58,237,0.12), transparent);
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,0,180,0.12), transparent 40%);
+      pointer-events: none;
+      animation: pulse-bg 18s infinite alternate;
+    }
+
+    @keyframes pulse-bg {
+      0% { transform: scale(1.1); opacity: 0.5; }
+      100% { transform: scale(1.4); opacity: 0.8; }
     }
 
     h1 {
-      font-size: 2.1rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #c084fc, #a78bfa, #7c3aed, #c084fc);
-      background-size: 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradient 7s linear infinite;
-    }
-
-    @keyframes gradient {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .status-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 14px;
-      background: rgba(34,197,94,0.15);
-      border: 1px solid rgba(34,197,94,0.4);
-      border-radius: 999px;
-      font-size: 0.9rem;
-      color: #4ade80;
-    }
-
-    .segmented {
-      display: flex;
-      margin: 16px 24px 0;
-      background: rgba(30,30,50,0.6);
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(120,100,255,0.2);
-    }
-
-    .segment-btn {
-      flex: 1;
-      padding: 14px;
-      background: transparent;
-      border: none;
-      color: var(--dim);
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-
-    .segment-btn.active {
-      background: rgba(124,58,237,0.35);
-      color: white;
-      box-shadow: inset 0 0 12px rgba(124,58,237,0.3);
-    }
-
-    .content {
-      padding: 24px;
-    }
-
-    .group {
-      margin-bottom: 28px;
-    }
-
-    .group label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-      color: var(--dim);
-      font-weight: 500;
-    }
-
-    input[type=range] {
-      width: 100%;
-      height: 10px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 5px;
-      appearance: none;
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      background: var(--accent-glow);
-      border-radius: 50%;
-      border: 3px solid #1e1e38;
-      box-shadow: 0 0 16px rgba(124,58,237,0.6);
-    }
-
-    input[type=text] {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(30,30,50,0.75);
-      border: 1px solid rgba(120,100,255,0.2);
-      border-radius: 16px;
-      color: white;
-      font-size: 1.05rem;
-      transition: all 0.2s;
-    }
-
-    input[type=text]:focus {
-      outline: none;
-      border-color: var(--accent-glow);
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
-    }
-
-    .row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 16px 0;
-    }
-
-    .preset-btn {
-      padding: 10px 16px;
-      background: rgba(30,30,50,0.8);
-      border: 1px solid rgba(120,100,255,0.25);
-      border-radius: 12px;
-      color: var(--dim);
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .preset-btn:hover {
-      background: rgba(124,58,237,0.25);
-      color: white;
-    }
-
-    #startBtn {
-      width: 100%;
-      padding: 18px;
-      margin: 24px 0 32px;
-      background: linear-gradient(135deg, #7c3aed, #a78bfa);
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      box-shadow: 0 12px 32px rgba(124,58,237,0.4);
-      transition: all 0.3s;
-    }
-
-    #startBtn.stop {
-      background: linear-gradient(135deg, #ef4444, #f87171);
-      box-shadow: 0 12px 32px rgba(239,68,68,0.4);
-    }
-
-    #status {
-      font-size: 1.35rem;
-      font-weight: 700;
       text-align: center;
-      margin-bottom: 12px;
-      min-height: 2.2em;
-    }
-
-    #status.hit {
-      background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
-      background-size: 200%;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #ff00aa, #aa00ff, #00ffff);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: flow 3s linear infinite;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 20px rgba(170, 0, 255, 0.7);
+      margin-bottom: 24px;
+      letter-spacing: 2px;
     }
 
-    @keyframes flow {
-      0%   { background-position: 0% }
-      100% { background-position: 200% }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
     }
 
-    .found-item {
-      background: rgba(34,197,94,0.18);
-      border: 1px solid rgba(34,197,94,0.45);
-      padding: 16px 20px;
-      border-radius: 16px;
-      margin-bottom: 12px;
+    select, button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(180, 0, 255, 0.4);
+      background: rgba(30, 10, 60, 0.6);
+      color: #e0e0ff;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    select:hover, select:focus {
+      border-color: #ff00cc;
+      box-shadow: 0 0 16px rgba(255, 0, 200, 0.4);
+      background: rgba(50, 20, 90, 0.7);
+    }
+
+    button {
+      grid-column: span 2;
+      background: linear-gradient(90deg, #ff0066, #cc00ff);
+      border: none;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 20px rgba(200, 0, 180, 0.5);
+      text-transform: uppercase;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(220, 0, 200, 0.7);
+    }
+
+    button.stop {
+      background: linear-gradient(90deg, #ff3366, #ff4444);
+      box-shadow: 0 6px 20px rgba(255, 60, 80, 0.5);
+    }
+
+    .stats {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      margin: 18px 0;
+      font-size: 0.95rem;
+      color: #bb99ff;
+      text-shadow: 0 0 8px rgba(180, 100, 255, 0.5);
     }
 
-    @keyframes popIn {
-      0% { transform: scale(0.7) translateY(30px); opacity: 0; }
-      100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-
-    .found-name {
+    .status {
+      text-align: center;
       font-size: 1.3rem;
       font-weight: 700;
-      background: linear-gradient(90deg, #22c55e, #4ade80);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      margin: 12px 0 20px;
+      letter-spacing: 2px;
     }
 
-    /* TERMINAL THREAD */
-    #threadContainer {
-      background: var(--terminal-bg);
-      border: 1px solid #003300;
+    .status.running { color: #00ffaa; text-shadow: 0 0 15px #00ffaa; }
+    .status.stopped { color: #ff6666; text-shadow: 0 0 15px #ff6666; }
+
+    .log {
+      background: rgba(10, 5, 30, 0.75);
       border-radius: 12px;
-      padding: 16px;
-      max-height: 480px;
+      padding: 14px;
+      max-height: 380px;
       overflow-y: auto;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.98rem;
-      color: var(--terminal-green);
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
-      position: relative;
-      line-height: 1.45;
+      font-size: 0.94rem;
+      border: 1px solid rgba(120, 0, 255, 0.15);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
     }
 
-    .thread-line {
-      margin-bottom: 4px;
-      white-space: pre-wrap;
-      word-break: break-all;
+    .log-entry {
+      margin: 6px 0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(20, 10, 50, 0.4);
+      transition: all 0.18s;
     }
 
-    .thread-line.found {
-      color: #00ff9d;
-      font-weight: bold;
-    }
+    .ok    { background: rgba(0, 220, 140, 0.18); color: #00ffbb; }
+    .bad   { background: rgba(255, 60, 80, 0.18); color: #ff7777; }
+    .error { background: rgba(255, 180, 60, 0.18); color: #ffcc66; }
 
-    .thread-line .time {
-      color: #004d00;
-      margin-right: 12px;
-    }
-
-    .thread-cursor {
-      display: inline-block;
-      width: 10px;
-      height: 1.1em;
-      background: var(--terminal-green);
-      animation: blink 1s step-end infinite;
-      vertical-align: middle;
-      margin-left: 4px;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-
-    #threadContainer::-webkit-scrollbar {
+    .log::-webkit-scrollbar {
       width: 6px;
     }
-
-    #threadContainer::-webkit-scrollbar-thumb {
-      background: #004d00;
+    .log::-webkit-scrollbar-track {
+      background: rgba(40,20,80,0.3);
+    }
+    .log::-webkit-scrollbar-thumb {
+      background: #aa44ff;
       border-radius: 3px;
     }
 
-    .scanline {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 2px,
-        rgba(0,255,65,0.03) 2px,
-        rgba(0,255,65,0.03) 4px
-      );
-      animation: scan 10s linear infinite;
-    }
-
-    @keyframes scan {
-      0%   { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
-    }
-
-    .footer {
-      text-align: center;
-      padding: 24px 20px;
-      color: var(--dim);
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(120,100,255,0.12);
-    }
-
-    canvas#confetti {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
+    @keyframes glow {
+      0%,100% { text-shadow: 0 0 10px currentColor; }
+      50%     { text-shadow: 0 0 25px currentColor, 0 0 40px currentColor; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="confetti"></canvas>
+<div class="app">
+  <h1>RedShift UserSearcher</h1>
 
-<div class="container">
-  <header>
-    <h1>RBLX Sniper</h1>
-    <div class="status-badge" id="statusBadge">Idle</div>
-  </header>
+  <div class="controls">
+    <select id="length">
+      <option value="3">Length: 3</option>
+      <option value="4">Length: 4</option>
+      <option value="5" selected>Length: 5</option>
+      <option value="6">Length: 6</option>
+      <option value="7">Length: 7</option>
+      <option value="8">Length: 8</option>
+      <option value="10">Length: 10</option>
+    </select>
 
-  <div class="segmented">
-    <button class="segment-btn active" data-panel="main">Snipe</button>
-    <button class="segment-btn" data-panel="thread">Thread</button>
+    <select id="speed">
+      <option value="1">1 check/sec</option>
+      <option value="2">2 / sec</option>
+      <option value="3" selected>3 / sec</option>
+      <option value="5">5 / sec (risky)</option>
+    </select>
   </div>
 
-  <div class="content" id="mainPanel">
-    <div class="group">
-      <label>Length <span id="lenVal">5</span></label>
-      <input type="range" id="length" min="3" max="16" value="5">
-    </div>
+  <button id="start">▶ Launch Scan</button>
+  <button id="stop" class="stop" disabled>⛔ Abort</button>
 
-    <div class="group">
-      <label>Delay <span id="delayVal">900</span> ms</label>
-      <input type="range" id="delay" min="300" max="2500" step="100" value="900">
-    </div>
-
-    <div class="group">
-      <label>Pattern / prefix</label>
-      <input type="text" id="pattern" placeholder="e.g. god??   xX_   RBLX">
-    </div>
-
-    <div class="row">
-      <button class="preset-btn" onclick="setPreset(3)">3 char</button>
-      <button class="preset-btn" onclick="setPreset(4)">4 char</button>
-      <button class="preset-btn" onclick="setPreset('num4')">4 numbers</button>
-      <button class="preset-btn" onclick="setPreset('rare')">Rare style</button>
-    </div>
-
-    <input type="text" id="webhookUrl" placeholder="Discord webhook URL (required for stop → file)" style="margin:16px 0;">
-
-    <button id="startBtn">START SNIPING</button>
-
-    <div id="status">Ready to hunt</div>
-
-    <div style="margin:20px 0; font-size:0.95rem; color:var(--dim); text-align:center;">
-      <div>Scanned: <span id="scanned">0</span></div>
-      <div>Found: <span id="foundCount">0</span></div>
-      <div id="speedometer">0.0 / sec</div>
-    </div>
-
-    <div id="foundContainer"></div>
+  <div class="stats">
+    <span>Checked: <span id="count">0</span></span>
+    <span>Available: <span id="avail">0</span></span>
   </div>
 
-  <div class="content" id="threadPanel" style="display:none; padding:0;">
-    <div id="threadContainer">
-      <div class="scanline"></div>
-      <div class="thread-line" style="color:#006600;">[SYSTEM] Terminal initialized — 2026-02-04 06:47 EST</div>
-      <div class="thread-line" style="color:#006600;">[INFO] Waiting for sniper activation...</div>
-    </div>
-  </div>
+  <div class="status stopped" id="status">OFFLINE</div>
 
-  <div class="footer">
-    Columbus, Ohio • February 04, 2026 • 06:47 AM EST
-  </div>
+  <div class="log" id="log"></div>
 </div>
 
 <script>
-// ──────────────────────────────────────────────
-//  Logic – sends .lua file on STOP
-// ──────────────────────────────────────────────
-
-const panels = {
-  main: document.getElementById('mainPanel'),
-  thread: document.getElementById('threadPanel')
-};
-
-document.querySelectorAll('.segment-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    Object.values(panels).forEach(p => p.style.display = 'none');
-    panels[btn.dataset.panel].style.display = 'block';
-  };
-});
-
-const lengthSlider   = document.getElementById('length');
-const delaySlider    = document.getElementById('delay');
-const lenVal         = document.getElementById('lenVal');
-const delayVal       = document.getElementById('delayVal');
-const patternInput   = document.getElementById('pattern');
-const webhookInput   = document.getElementById('webhookUrl');
-const startBtn       = document.getElementById('startBtn');
-const statusEl       = document.getElementById('status');
-const scannedEl      = document.getElementById('scanned');
-const foundEl        = document.getElementById('foundCount');
-const speedEl        = document.getElementById('speedometer');
-const badge          = document.getElementById('statusBadge');
-const threadCont     = document.getElementById('threadContainer');
+const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+const logEl   = document.getElementById("log");
+const statusEl = document.getElementById("status");
+const countEl  = document.getElementById("count");
+const availEl  = document.getElementById("avail");
+const startBtn = document.getElementById("start");
+const stopBtn  = document.getElementById("stop");
 
 let running = false;
-let scanned = 0;
-let found   = 0;
-let foundNames = []; // ← we collect only available ones here
-let lastTime = performance.now();
-let checksThisSec = 0;
+let timer;
+let checked = 0;
+let available = 0;
 
-lengthSlider.oninput = () => lenVal.textContent = lengthSlider.value;
-delaySlider.oninput  = () => delayVal.textContent  = delaySlider.value;
+function randomName(len) {
+  let s = "";
+  for (let i = 0; i < len; i++) {
+    s += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return s;
+}
 
-function setPreset(v) {
-  if (v === 'num4') {
-    patternInput.value = '????';
-    lengthSlider.value = 4; lenVal.textContent = 4;
-  } else if (v === 'rare') {
-    patternInput.value = 'x?x?x';
-  } else {
-    lengthSlider.value = v;
-    lenVal.textContent = v;
-    patternInput.value = '';
+function addLog(msg, type = "info") {
+  const div = document.createElement("div");
+  div.className = `log-entry ${type}`;
+  div.textContent = msg;
+  logEl.insertAdjacentElement("afterbegin", div);
+
+  // Keep only last 150 entries
+  while (logEl.children.length > 150) {
+    logEl.removeChild(logEl.lastChild);
   }
 }
 
-function randChar() {
-  const s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return s[Math.floor(Math.random()*s.length)];
-}
+async function check() {
+  if (!running) return;
 
-function generateName() {
-  let pat = patternInput.value.trim();
-  if (!pat) return Array(+lengthSlider.value).fill().map(randChar).join('');
-  return pat.replace(/\?/g, randChar);
-}
+  const len = parseInt(document.getElementById("length").value);
+  const name = randomName(len);
 
-function logToThread(text, isFound = false) {
-  const line = document.createElement('div');
-  line.className = 'thread-line' + (isFound ? ' found' : '');
-  line.innerHTML = `
-    <span class="time">[${new Date().toLocaleTimeString([], {hour12:false})}]</span>
-    ${text}
-  `;
-  threadCont.insertBefore(line, threadCont.firstChild);
-
-  if (threadCont.children.length > 120) {
-    threadCont.removeChild(threadCont.lastChild);
-  }
-
-  threadCont.scrollTop = 0;
-}
-
-function addFound(name) {
-  found++;
-  foundNames.push(name); // collect for lua file
-  foundEl.textContent = found;
-
-  const container = document.getElementById('foundContainer');
-  const item = document.createElement('div');
-  item.className = 'found-item';
-  item.innerHTML = `
-    <div class="found-name">${name}</div>
-    <div style="display:flex; gap:12px;">
-      <button onclick="navigator.clipboard.writeText('${name}').then(()=>alert('Copied!'))"
-              style="background:#4ade80; color:black; padding:8px 14px; border:none; border-radius:12px; cursor:pointer;">
-        Copy
-      </button>
-      <a href="https://www.roblox.com/users/profile?username=${encodeURIComponent(name)}" target="_blank"
-         style="background:#3b82f6; color:white; padding:8px 14px; border-radius:12px; text-decoration:none;">
-        Profile
-      </a>
-    </div>
-  `;
-  container.prepend(item);
-
-  confettiBurst();
-}
-
-async function check(name) {
-  try {
-    const r = await fetch(`https://auth.roproxy.com/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=2000-01-01`);
-    const j = await r.json();
-    return j.code === 0;
-  } catch {
-    return false;
-  }
-}
-
-function updateSpeed() {
-  const now = performance.now();
-  const dt = now - lastTime;
-  if (dt > 1000) {
-    speedEl.textContent = (checksThisSec / (dt/1000)).toFixed(1) + ' / sec';
-    checksThisSec = 0;
-    lastTime = now;
-  }
-}
-
-async function sendAvailableAsLuaFile() {
-  const webhook = webhookInput.value.trim();
-  if (!webhook) {
-    alert("No webhook URL set → file not sent");
-    return;
-  }
-
-  if (foundNames.length === 0) {
-    // send simple message if nothing found
-    fetch(webhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: "No available usernames found during this session."
-      })
-    }).catch(() => {});
-    return;
-  }
-
-  // build Lua content
-  const dateStr = new Date().toISOString().slice(0,10) + "_" + new Date().toLocaleTimeString().replace(/:/g,'');
-  const filename = `available_usernames_${dateStr}.lua`;
-
-  const luaContent = `-- Available Roblox usernames found\n` +
-                     `-- Date: ${new Date().toLocaleString()}\n` +
-                     `-- You can choose any of these:\n\n` +
-                     `local available = {\n` +
-                     foundNames.map(n => `    "${n}",`).join('\n') + `\n}\n\n` +
-                     `-- Example usage:\n` +
-                     `-- print(available[1])   -- first one\n` +
-                     `-- or just copy-paste one name`;
-
-  const blob = new Blob([luaContent], { type: "text/plain" });
-  const file = new File([blob], filename, { type: "text/plain" });
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("payload_json", JSON.stringify({
-    content: `Found **${foundNames.length}** available username(s) during session.\nAttached: \`${filename}\``
-  }));
+  checked++;
+  countEl.textContent = checked;
 
   try {
-    await fetch(webhook, {
-      method: "POST",
-      body: formData
+    // Using real Roblox validate endpoint (may require proxy!)
+    const url = `https://auth.roblox.com/v1/usernames/validate?username=${encodeURIComponent(name)}&birthday=2000-01-01&context=Signup`;
+    
+    const r = await fetch(url, { 
+      method: "GET",
+      mode: "cors",           // will likely fail without proxy
+      cache: "no-cache"
     });
-    logToThread("[WEBHOOK] Successfully sent available usernames as .lua file");
-  } catch (err) {
-    logToThread(`[ERROR] Failed to send webhook: ${err.message}`);
-  }
-}
 
-startBtn.onclick = async () => {
-  running = !running;
-  startBtn.textContent = running ? 'STOP' : 'START SNIPING';
-  startBtn.classList.toggle('stop', running);
-  badge.textContent = running ? 'Scanning…' : 'Idle';
+    if (!r.ok) throw new Error("HTTP " + r.status);
 
-  if (running) {
-    logToThread("<span style='color:#00aa2a'>[SYSTEM] Sniper thread activated</span>");
-    foundNames = []; // reset list when starting new session
-  } else {
-    logToThread("<span style='color:#ff5555'>[SYSTEM] Sniper thread terminated</span>");
-    logToThread(`[SUMMARY] Found ${foundNames.length} available username(s)`);
-    await sendAvailableAsLuaFile();
-  }
+    const data = await r.json();
 
-  if (!running) {
-    statusEl.textContent = 'Stopped';
-    return;
-  }
-
-  statusEl.textContent = 'Starting scan...';
-  scanned = found = 0;
-  scannedEl.textContent = foundEl.textContent = '0';
-  document.getElementById('foundContainer').innerHTML = '';
-
-  while (running) {
-    const name = generateName();
-    scanned++;
-    scannedEl.textContent = scanned;
-    checksThisSec++;
-
-    statusEl.textContent = `Checking ${name} …`;
-
-    const available = await check(name);
-
-    logToThread(`${available ? '✓' : '✗'} ${name}`, available);
-
-    if (available) {
-      statusEl.classList.add('hit');
-      statusEl.textContent = `HIT → ${name}`;
-      addFound(name);
-      setTimeout(() => statusEl.classList.remove('hit'), 2200);
+    if (data.code === 0) {
+      // Available
+      available++;
+      availEl.textContent = available;
+      addLog(`✔  ${name}  → AVAILABLE`, "ok");
+    } else if (data.code === 10) {
+      addLog(`✖  ${name}  taken`, "bad");
+    } else {
+      addLog(`⚠  ${name}  → ${data.message || "invalid"}`, "error");
     }
-
-    updateSpeed();
-
-    await new Promise(r => setTimeout(r, parseInt(delaySlider.value)));
+  } catch (err) {
+    addLog(`⚠ ERROR  ${name}  → ${err.message}`, "error");
   }
-};
-
-// confetti (unchanged from previous)
-function confettiBurst() {
-  const c = document.getElementById('confetti');
-  const ctx = c.getContext('2d');
-  c.width = window.innerWidth;
-  c.height = window.innerHeight;
-
-  let particles = [];
-  for (let i = 0; i < 100; i++) {
-    particles.push({
-      x: Math.random() * c.width,
-      y: Math.random() * c.height * 0.5,
-      r: Math.random() * 5 + 3,
-      color: ['#22c55e', '#4ade80', '#86efac', '#a78bfa', '#c084fc'][Math.floor(Math.random()*5)],
-      vx: (Math.random() - 0.5) * 12,
-      vy: (Math.random() - 0.5) * 10 - 5,
-      life: 1,
-      decay: 0.012 + Math.random() * 0.008
-    });
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, c.width, c.height);
-    particles = particles.filter(p => p.life > 0.01);
-
-    particles.forEach(p => {
-      ctx.save();
-      ctx.globalAlpha = p.life;
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.18;
-      p.life -= p.decay;
-    });
-
-    if (particles.length > 0) requestAnimationFrame(animate);
-  }
-
-  animate();
 }
 
-window.addEventListener('resize', () => {
-  const c = document.getElementById('confetti');
-  c.width = window.innerWidth;
-  c.height = window.innerHeight;
-});
+function startScan() {
+  if (running) return;
+  running = true;
+  checked = 0; available = 0;
+  countEl.textContent = "0";
+  availEl.textContent = "0";
+
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+  statusEl.textContent = "SCANNING";
+  statusEl.className = "status running";
+
+  const intervalMs = 1000 / parseFloat(document.getElementById("speed").value);
+  timer = setInterval(check, intervalMs);
+}
+
+function stopScan() {
+  running = false;
+  clearInterval(timer);
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+  statusEl.textContent = "OFFLINE";
+  statusEl.className = "status stopped";
+}
+
+startBtn.onclick = startScan;
+stopBtn.onclick  = stopScan;
 </script>
 </body>
 </html>
